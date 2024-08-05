@@ -41,5 +41,5 @@ INSERT INTO Employee (id, email, password, adminId) VALUES (1, 'emp1@example.com
 
 -- Add an Employee example
 INSERT INTO Employee (id, email, password, adminId) VALUES (2, 'emp2@example.com', 'password234', 1);
-INSERT INTO Vacation (noOfDays, employeeId) VALUES (10, 2);
-INSERT INTO UsedDays (beginDay, beginDate, endDay, endDate, employeeId) VALUES ('Monday', '2024-01-01', 'Friday', '2024-01-05', 1);
+INSERT INTO Vacation (id, noOfDays, employeeId) VALUES (1, 10, 2);
+INSERT INTO UsedDays (id, beginDay, beginDate, endDay, endDate, employeeId) VALUES (1, 'Monday', '2024-01-01', 'Friday', '2024-01-05', 1);

@@ -8,8 +8,8 @@ import org.springframework.data.relational.core.mapping.Table
 data class Vacation(
     @Id
     val id: Long = 0,
-    @Column("noOfDays")
+    @Column("noofdays")
     var noOfDays: Int,
-    @Column("employeeId")
+    @Column("employeeid")
     var employeeId: Long,
 )

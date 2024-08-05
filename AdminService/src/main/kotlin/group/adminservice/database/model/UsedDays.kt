@@ -11,14 +11,14 @@ import java.util.*
 data class UsedDays(
     @Id
     val id: Long = 0,
-    @Column("beginDay")
+    @Column("beginday")
     val beginDay: String,
-    @Column("beginDate")
+    @Column("begindate")
     val beginDate: Date,
-    @Column("endDay")
+    @Column("endday")
     val endDay: String,
-    @Column("endDate")
+    @Column("enddate")
     val endDate: Date,
-    @Column("employeeId")
+    @Column("employeeid")
     val employeeId: Long,
 )
