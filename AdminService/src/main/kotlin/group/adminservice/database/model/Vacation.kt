@@ -1,15 +1,19 @@
 package group.adminservice.database.model
 
-import org.springframework.data.annotation.Id
-import org.springframework.data.relational.core.mapping.Column
-import org.springframework.data.relational.core.mapping.Table
+import com.fasterxml.jackson.annotation.JsonBackReference
+import jakarta.persistence.*
+import lombok.NoArgsConstructor
 
-@Table("Vacation")
+@Entity
+@Table(name = "vacation")
+@NoArgsConstructor
 data class Vacation(
     @Id
-    val id: Long = 0,
-    @Column("noofdays")
-    var noOfDays: Int,
-    @Column("employeeid")
-    var employeeId: Long,
+    val vacation_id: Long = 0,
+    @Column(name = "noofdays")
+    var noOfDays: Int = 0,
+    @ManyToOne
+    @JoinColumn(name = "employee_id", nullable = false)
+    @JsonBackReference
+    val employee: Employee? = null,
 )

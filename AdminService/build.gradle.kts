@@ -28,6 +28,12 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // Lombok dependencies
+    compileOnly("org.projectlombok:lombok:1.18.24")
+    annotationProcessor("org.projectlombok:lombok:1.18.24")
+    testCompileOnly("org.projectlombok:lombok:1.18.24")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.24")
 }
 
 kotlin {
