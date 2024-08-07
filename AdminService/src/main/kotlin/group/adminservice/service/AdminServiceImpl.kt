@@ -22,13 +22,15 @@ class AdminServiceImpl(
 ) : AdminService {
     override fun getAllEmployees(): List<Employee> = employeeRepository.findAll().toList()
 
-    override fun importVacations(data: ByteArray): List<Vacation> {
-        TODO("Not yet implemented")
-    }
+    override fun importVacations(data: ByteArray): List<Vacation> =
+        vacationRepository.saveAll(
+            CSVParser.parseVacations(data, getAdminById(1)),
+        )
 
-    override fun importUsedDays(data: ByteArray): List<UsedDays> {
-        TODO("Not yet implemented")
-    }
+    override fun importUsedDays(data: ByteArray): List<UsedDays> =
+        usedDaysRepository.saveAll(
+            CSVParser.parseUsedDays(data, getAdminById(1)),
+        )
 
     override fun importEmployees(data: ByteArray): List<Employee> {
         println("zovem repo")
@@ -42,11 +44,6 @@ class AdminServiceImpl(
         val adminO = adminRepository.findById(id)
         return adminO.orElseThrow { RuntimeException("Admin not found") }
     }
+
+    fun getEmployeeByMail(email: String): Employee = employeeRepository.findByEmail(email).orElseThrow()
 }
-
-data class EmployeeDetails(
-    val employee: Employee,
-    val vacations: List<Vacation>,
-    val usedDays: List<UsedDays>,
-)
-

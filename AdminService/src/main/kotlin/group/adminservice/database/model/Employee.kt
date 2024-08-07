@@ -30,5 +30,21 @@ data class Employee(
     var vacations: List<Vacation> = mutableListOf(),
 ) {
     constructor(id: Long, email: String, password: String) : this(id, email, password, null, emptyList())
+
+    fun addVacation(vacation: Vacation) {
+        vacations.plus(vacation)
+    }
+
+    fun getAllVacations(): List<Vacation> = vacations
+
+    fun getMaxVacationId(): Long = vacations.maxOfOrNull { it.vacation_id } ?: 0
+
+    fun addUsedDays(usedDay: UsedDays) {
+        usedDays.plus(usedDay)
+    }
+
+    fun getAllUsedDays(): List<UsedDays> = usedDays
+
+    fun getMaxUsedDaysId(): Long = usedDays.maxOfOrNull { it.useddays_id } ?: 0
 }
 

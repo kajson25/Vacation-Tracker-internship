@@ -16,4 +16,6 @@ data class Vacation(
     @JoinColumn(name = "employee_id", nullable = false)
     @JsonBackReference
     val employee: Employee? = null,
-)
+) {
+    constructor(vacation_id: Long, noOfDays: Int) : this()
+}
