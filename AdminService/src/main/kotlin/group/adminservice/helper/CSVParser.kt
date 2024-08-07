@@ -70,11 +70,14 @@ object CSVParser {
                 val parts = it.split(",")
                 var nextId = employee.getMaxUsedDaysId() + 1
                 if (employee.email == parts[0]) {
-                    val usedDay = UsedDays(nextId++, parts[1],
-                                            Date.from(Instant.parse(parts[2])),
-                                            parts[3],
-                                            Date.from(Instant.parse(parts[4]))
-                                        )
+                    val usedDay =
+                        UsedDays(
+                            nextId++,
+                            parts[1],
+                            Date.from(Instant.parse(parts[2])),
+                            parts[3],
+                            Date.from(Instant.parse(parts[4])),
+                        )
                     employee.addUsedDays(usedDay)
                     usedDays.plus(usedDay)
                     // break; todo ?????????? optimizacija brooo

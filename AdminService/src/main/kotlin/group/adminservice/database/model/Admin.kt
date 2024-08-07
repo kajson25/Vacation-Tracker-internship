@@ -2,13 +2,9 @@ package group.adminservice.database.model
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
-import lombok.AllArgsConstructor
-import lombok.NoArgsConstructor
 
 @Entity
 @Table(name = "admin")
-@NoArgsConstructor
-@AllArgsConstructor
 data class Admin(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

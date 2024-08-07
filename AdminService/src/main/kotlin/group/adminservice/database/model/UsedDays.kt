@@ -2,12 +2,10 @@ package group.adminservice.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
 import jakarta.persistence.*
-import lombok.NoArgsConstructor
 import java.util.*
 
 @Entity
 @Table(name = "useddays")
-@NoArgsConstructor
 data class UsedDays(
     @Id
     val useddays_id: Long = 0,
