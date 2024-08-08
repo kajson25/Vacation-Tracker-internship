@@ -35,27 +35,20 @@ object CSVParser {
         data: ByteArray,
         admin: Admin,
     ): List<Vacation> {
-        val vacations: List<Vacation> = listOf()
-        readLines(data).forEach {
-            admin.getAllEmployees().forEach { employee ->
-                // cim nadjes employee za mail, break
-                val parts = it.split(",")
-                var nextId = employee.getMaxVacationId() + 1
+        val vacations = mutableListOf<Vacation>()
+
+        val lines = readLines(data)
+        for (line in lines) {
+            inner@ for (employee in admin.getAllEmployees()) {
+                val parts = line.split(",")
                 if (employee.email == parts[0]) {
-                    val vacation = Vacation(nextId++, parts[1].toInt())
-                    employee.addVacation(vacation)
-                    vacations.plus(vacation)
-                    // break; todo ?????????? optimizacija brooo
+                    val vacation = Vacation(noOfDays = parts[1].toInt(), employee = employee)
+                    employee.vacations = employee.addVacation(vacation)
+                    vacations.add(vacation)
+                    break@inner
                 }
             }
         }
-        // za slucaj da je admin null
-//        employee.admin?.let { readLines(data, it) }?.forEach { line ->
-//            val parts = line.split(",")
-//
-//            // todo nije dobra logika; ja za jednog employee-ja dodajem sve Vacatione
-//            // a treba samo ako se slazu mejlovi, razmisli
-//        }
         return vacations
     }
 
@@ -63,24 +56,24 @@ object CSVParser {
         data: ByteArray,
         admin: Admin,
     ): List<UsedDays> {
-        val usedDays: List<UsedDays> = listOf()
-        readLines(data).forEach {
-            admin.getAllEmployees().forEach { employee ->
-                // cim nadjes employee za mail, break
-                val parts = it.split(",")
-                var nextId = employee.getMaxUsedDaysId() + 1
+        val usedDays = mutableListOf<UsedDays>()
+
+        val lines = readLines(data)
+        for (line in lines) {
+            inner@ for (employee in admin.getAllEmployees()) {
+                val parts = line.split(",")
                 if (employee.email == parts[0]) {
                     val usedDay =
                         UsedDays(
-                            nextId++,
-                            parts[1],
-                            Date.from(Instant.parse(parts[2])),
-                            parts[3],
-                            Date.from(Instant.parse(parts[4])),
+                            beginDay = parts[1],
+                            beginDate = Date.from(Instant.parse(parts[2])),
+                            endDay = parts[3],
+                            endDate = Date.from(Instant.parse(parts[4])),
+                            employee = employee,
                         )
-                    employee.addUsedDays(usedDay)
-                    usedDays.plus(usedDay)
-                    // break; todo ?????????? optimizacija brooo
+                    employee.usedDays = employee.addUsedDays(usedDay)
+                    usedDays.add(usedDay)
+                    break@inner
                 }
             }
         }

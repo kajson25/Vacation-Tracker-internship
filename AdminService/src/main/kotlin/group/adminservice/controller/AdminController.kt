@@ -18,9 +18,7 @@ class AdminController(
         @RequestBody data: ByteArray,
         response: HttpServletResponse,
     ): ResponseEntity<List<Employee>> {
-        val contentLength = data.size
         val contentType = "text/csv"
-        response.setContentLength(contentLength)
         response.contentType = contentType
         return ResponseEntity.ok(adminService.importEmployees(data))
     }
@@ -30,9 +28,7 @@ class AdminController(
         @RequestBody data: ByteArray,
         response: HttpServletResponse,
     ): ResponseEntity<List<Vacation>> {
-        val contentLength = data.size
         val contentType = "text/csv"
-        response.setContentLength(contentLength)
         response.contentType = contentType
         return ResponseEntity.ok(adminService.importVacations(data))
     }
@@ -42,9 +38,7 @@ class AdminController(
         @RequestBody data: ByteArray,
         response: HttpServletResponse,
     ): ResponseEntity<List<UsedDays>> {
-        val contentLength = data.size
         val contentType = "text/csv"
-        response.setContentLength(contentLength)
         response.contentType = contentType
         return ResponseEntity.ok(adminService.importUsedDays(data))
     }

@@ -42,3 +42,6 @@ INSERT INTO employee (id, email, password, adminId) VALUES (1, 'emp1@example.com
 INSERT INTO employee (id, email, password, adminId) VALUES (2, 'emp2@example.com', 'password234', 1);
 INSERT INTO vacation (id, noOfDays, employeeId) VALUES (1, 10, 2);
 INSERT INTO useddays (id, beginDay, beginDate, endDay, endDate, employeeId) VALUES (1, 'Monday', '2024-01-01', 'Friday', '2024-01-05', 1);
+
+DELETE FROM employee
+WHERE employee_id >= 100 AND employee_id <= 500;

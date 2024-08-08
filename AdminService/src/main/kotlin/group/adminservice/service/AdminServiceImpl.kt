@@ -43,7 +43,6 @@ class AdminServiceImpl(
     }
 
     override fun getAdminById(id: Long): Admin {
-        println("Trazim admina")
         val adminO = adminRepository.findById(id)
         return adminO.orElseThrow { RuntimeException("Admin not found") }
     }

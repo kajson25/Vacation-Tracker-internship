@@ -1,7 +1,6 @@
 package group.adminservice.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
-import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
 
 @Entity
@@ -19,25 +18,19 @@ data class Employee(
     @JsonBackReference
     val admin: Admin? = null,
     @OneToMany(mappedBy = "employee")
-    @JsonManagedReference
     var usedDays: List<UsedDays> = mutableListOf(),
     @OneToMany(mappedBy = "employee")
-    @JsonManagedReference
     var vacations: List<Vacation> = mutableListOf(),
 ) {
     constructor(id: Long, email: String, password: String) : this(id, email, password, null, emptyList())
 
-    fun addVacation(vacation: Vacation) {
-        vacations.plus(vacation)
-    }
+    fun addVacation(vacation: Vacation): List<Vacation> = vacations.plus(vacation)
 
     fun getAllVacations(): List<Vacation> = vacations
 
     fun getMaxVacationId(): Long = vacations.maxOfOrNull { it.vacation_id } ?: 0
 
-    fun addUsedDays(usedDay: UsedDays) {
-        usedDays.plus(usedDay)
-    }
+    fun addUsedDays(usedDay: UsedDays): List<UsedDays> = usedDays.plus(usedDay)
 
     fun getAllUsedDays(): List<UsedDays> = usedDays
 
