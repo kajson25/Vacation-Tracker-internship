@@ -1,6 +1,7 @@
 package group.adminservice.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
 
 @Entity
@@ -18,6 +19,7 @@ data class Employee(
     @JsonBackReference
     val admin: Admin? = null,
     @OneToMany(mappedBy = "employee")
+    @JsonManagedReference
     var usedDays: List<UsedDays> = mutableListOf(),
     @OneToMany(mappedBy = "employee")
     var vacations: List<Vacation> = mutableListOf(),

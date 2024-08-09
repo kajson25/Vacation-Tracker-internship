@@ -14,5 +14,5 @@ interface AdminService {
 
     fun importEmployees(data: ByteArray): List<Employee>
 
-    fun getAdminById(id: Long): Admin
+    fun getAdminById(id: Long): Admin // potencijalno ne mora da stoji u interfejsu, vec moze da bude privatna unutar klase
 }

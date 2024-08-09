@@ -10,6 +10,8 @@ data class Vacation(
     val vacation_id: Long = 0,
     @Column(name = "noofdays")
     var noOfDays: Int = 0,
+    @Column(name = "year")
+    var year: Int = 2018,
     @ManyToOne
     @JoinColumn(name = "employee_id")
     var employee: Employee? = null,
