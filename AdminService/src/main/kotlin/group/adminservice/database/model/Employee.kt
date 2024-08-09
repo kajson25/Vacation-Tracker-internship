@@ -26,16 +26,27 @@ data class Employee(
 ) {
     constructor(id: Long, email: String, password: String) : this(id, email, password, null, emptyList())
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || javaClass != other.javaClass) return false
+
+        other as Employee
+
+        return email == other.email
+    }
+
+    override fun hashCode(): Int = email.hashCode()
+
     fun addVacation(vacation: Vacation): List<Vacation> = vacations.plus(vacation)
-
-    fun getAllVacations(): List<Vacation> = vacations
-
-    fun getMaxVacationId(): Long = vacations.maxOfOrNull { it.vacation_id } ?: 0
 
     fun addUsedDays(usedDay: UsedDays): List<UsedDays> = usedDays.plus(usedDay)
 
-    fun getAllUsedDays(): List<UsedDays> = usedDays
-
-    fun getMaxUsedDaysId(): Long = usedDays.maxOfOrNull { it.useddays_id } ?: 0
+    fun calculateAllFreeDays(): Int {
+        var res = 0
+        for (vacation: Vacation in vacations) {
+            res += vacation.noOfDays
+        }
+        return res
+    }
 }
 

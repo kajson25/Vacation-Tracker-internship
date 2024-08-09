@@ -18,4 +18,19 @@ data class UsedDays(
     @JoinColumn(name = "employee_id")
     @JsonBackReference
     val employee: Employee? = null,
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || javaClass != other.javaClass) return false
+
+        other as UsedDays
+
+        // Consider two UsedDays equal if either beginDate or endDate are the same
+        return (beginDate == other.beginDate || endDate == other.endDate)
+    }
+
+    override fun hashCode(): Int {
+        // XOR combination to create a hash code considering both dates
+        return (beginDate?.hashCode() ?: 0) xor (endDate?.hashCode() ?: 0)
+    }
+}

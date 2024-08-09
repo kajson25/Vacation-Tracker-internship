@@ -8,6 +8,7 @@ import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStreamReader
 import java.sql.Date
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -27,15 +28,21 @@ object CSVParser {
     fun parseEmployees(
         data: ByteArray,
         admin: Admin,
-    ) {
+    ): List<Employee> {
+        val res = mutableListOf<Employee>()
         val lines = readLines(data, false)
         var nextId = admin.getMaxId() + 1
 
-        lines.forEach { line ->
+        for (line: String in lines) {
             val parts = line.split(",")
             val employee = Employee(nextId++, parts[0], parts[1])
+            if (admin.getAllEmployees().contains(employee)) {
+                continue
+            }
             admin.addEmployee(employee)
+            res.add(employee)
         }
+        return res
     }
 
     fun parseVacations(
@@ -82,6 +89,9 @@ object CSVParser {
                             endDate = Date.valueOf(LocalDate.parse(endDate, formatter)),
                             employee = employee,
                         )
+                    if(employee.usedDays.contains(usedDay)) {
+                        break@inner
+                    }
                     employee.usedDays = employee.addUsedDays(usedDay)
                     usedDays.add(usedDay)
                     break@inner
@@ -89,5 +99,24 @@ object CSVParser {
             }
         }
         return usedDays
+    }
+
+    fun calculateWorkDays(
+        beginDate: Date?,
+        endDate: Date?,
+    ): Int {
+        var workingDays = 0
+        var currentDate = beginDate?.toLocalDate()
+
+        if (endDate != null && currentDate != null) {
+            while (currentDate!! <= endDate.toLocalDate()) {
+                if (currentDate.dayOfWeek != DayOfWeek.SATURDAY && currentDate.dayOfWeek != DayOfWeek.SUNDAY) {
+                    workingDays++
+                }
+                currentDate = currentDate.plusDays(1)
+            }
+        }
+
+        return workingDays
     }
 }
