@@ -39,7 +39,7 @@ object CSVParser {
             if (admin.getAllEmployees().contains(employee)) {
                 continue
             }
-            admin.addEmployee(employee)
+            admin.employees = admin.addEmployee(employee)
             res.add(employee)
         }
         return res
