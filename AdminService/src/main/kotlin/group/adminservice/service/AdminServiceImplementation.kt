@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service
 
 @Service
 @Transactional
-class AdminServiceImpl(
+class AdminServiceImplementation(
     private val employeeRepository: EmployeeRepository,
     private val vacationRepository: VacationRepository,
     private val usedDaysRepository: UsedDaysRepository,
@@ -26,7 +26,7 @@ class AdminServiceImpl(
     override fun importVacations(data: ByteArray): List<Vacation> {
         val admin = getAdminById(1)
         return vacationRepository.saveAll(
-            CSVParser.parseVacations(data, admin)
+            CSVParser.parseVacations(data, admin),
         )
     }
 

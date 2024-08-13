@@ -31,11 +31,10 @@ object CSVParser {
     ): List<Employee> {
         val res = mutableListOf<Employee>()
         val lines = readLines(data, false)
-        var nextId = admin.getMaxId() + 1
 
         for (line: String in lines) {
             val parts = line.split(",")
-            val employee = Employee(nextId++, parts[0], parts[1])
+            val employee = Employee(email = parts[0], password = parts[1])
             if (admin.getAllEmployees().contains(employee)) {
                 continue
             }
@@ -89,7 +88,7 @@ object CSVParser {
                             endDate = Date.valueOf(LocalDate.parse(endDate, formatter)),
                             employee = employee,
                         )
-                    if(employee.usedDays.contains(usedDay)) {
+                    if (employee.usedDays.contains(usedDay)) {
                         break@inner
                     }
                     employee.usedDays = employee.addUsedDays(usedDay)

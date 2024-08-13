@@ -24,8 +24,6 @@ data class Employee(
     @OneToMany(mappedBy = "employee")
     var vacations: List<Vacation> = mutableListOf(),
 ) {
-    constructor(id: Long, email: String, password: String) : this(id, email, password, null, emptyList())
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || javaClass != other.javaClass) return false

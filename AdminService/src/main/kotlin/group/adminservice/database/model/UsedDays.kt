@@ -25,7 +25,7 @@ data class UsedDays(
 
         other as UsedDays
 
-        // Consider two UsedDays equal if either beginDate or endDate are the same
+        // Two UsedDays are equal if either beginDate or endDate are the same
         return (beginDate == other.beginDate || endDate == other.endDate)
     }
 

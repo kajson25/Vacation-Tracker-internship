@@ -42,4 +42,7 @@ class AdminController(
         response.contentType = contentType
         return ResponseEntity.ok(adminService.importUsedDays(data))
     }
+
+    @GetMapping("/allEmployees")
+    fun allEmployees(response: HttpServletResponse): ResponseEntity<List<Employee>> = ResponseEntity.ok(adminService.getAllEmployees())
 }

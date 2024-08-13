@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7200172c-4747-4f96-a0cd-69dcef219239" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/database/model/Admin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/database/model/Admin.kt" afterDir="false" />
-    </list>
+    <list default="true" id="7200172c-4747-4f96-a0cd-69dcef219239" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -77,6 +73,7 @@
       <workItem from="1723294079298" duration="220000" />
       <workItem from="1723375552361" duration="999000" />
       <workItem from="1723383827888" duration="1022000" />
+      <workItem from="1723400645966" duration="86000" />
     </task>
     <servers />
   </component>
