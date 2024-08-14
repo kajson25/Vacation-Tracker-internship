@@ -1,5 +1,6 @@
 package group.adminservice.security.api
 
+import group.adminservice.security.api.jwt.Role
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -33,7 +34,7 @@ class SecurityConfig(
                 ApiKeyAuthenticationToken(
                     apiKey,
                     // apiSecret,
-                    listOf(SimpleGrantedAuthority("ROLE_ADMIN")),
+                    // listOf(SimpleGrantedAuthority(Role.ADMIN.name)),
                 )
             } else {
                 authentication.isAuthenticated = false
@@ -47,8 +48,8 @@ class SecurityConfig(
             .authorizeHttpRequests { authorize ->
                 authorize
                     .requestMatchers("/api/admin/**")
-                    .hasRole("ADMIN")
-                    // .authenticated()
+                    // .hasRole(Role.ADMIN.name)
+                    .authenticated()
                     .anyRequest()
                     .permitAll()
             }.addFilterBefore(filter, UsernamePasswordAuthenticationFilter::class.java)

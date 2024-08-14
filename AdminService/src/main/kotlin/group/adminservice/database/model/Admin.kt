@@ -13,8 +13,6 @@ data class Admin(
     @OneToMany(mappedBy = "admin")
     @JsonManagedReference
     var employees: List<Employee> = listOf(),
-    @Enumerated(EnumType.STRING)
-    val role: Role = Role.ADMIN,
 ) {
     fun addEmployee(employee: Employee): List<Employee> = employees.plus(employee)
 

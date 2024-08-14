@@ -24,8 +24,6 @@ data class Employee(
     var usedDays: List<UsedDays> = mutableListOf(),
     @OneToMany(mappedBy = "employee")
     var vacations: List<Vacation> = mutableListOf(),
-    @Enumerated(EnumType.STRING)
-    val role: Role = Role.EMPLOYEE,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
