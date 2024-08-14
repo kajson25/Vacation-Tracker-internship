@@ -2,6 +2,7 @@ package group.adminservice.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
+import group.adminservice.security.api.jwt.Role
 import jakarta.persistence.*
 
 @Entity
@@ -23,6 +24,8 @@ data class Employee(
     var usedDays: List<UsedDays> = mutableListOf(),
     @OneToMany(mappedBy = "employee")
     var vacations: List<Vacation> = mutableListOf(),
+    @Enumerated(EnumType.STRING)
+    val role: Role = Role.EMPLOYEE,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

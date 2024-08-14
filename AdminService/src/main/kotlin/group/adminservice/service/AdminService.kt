@@ -1,18 +1,18 @@
 package group.adminservice.service
 
 import group.adminservice.database.model.Admin
-import group.adminservice.database.model.Employee
-import group.adminservice.database.model.UsedDays
-import group.adminservice.database.model.Vacation
+import group.adminservice.dto.EmployeeDTO
+import group.adminservice.dto.UsedDaysDTO
+import group.adminservice.dto.VacationDTO
 
 interface AdminService {
-    fun getAllEmployees(): List<Employee>
+    fun getAllEmployees(): List<EmployeeDTO>
 
-    fun importVacations(data: ByteArray): List<Vacation>
+    fun importVacations(data: ByteArray): List<VacationDTO>
 
-    fun importUsedDays(data: ByteArray): List<UsedDays>
+    fun importUsedDays(data: ByteArray): List<UsedDaysDTO>
 
-    fun importEmployees(data: ByteArray): List<Employee>
+    fun importEmployees(data: ByteArray): List<EmployeeDTO>
 
     fun getAdminById(id: Long): Admin // potencijalno ne mora da stoji u interfejsu, vec moze da bude privatna unutar klase
 }

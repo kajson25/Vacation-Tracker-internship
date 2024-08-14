@@ -1,8 +1,8 @@
 package group.adminservice.controller
 
-import group.adminservice.database.model.Employee
-import group.adminservice.database.model.UsedDays
-import group.adminservice.database.model.Vacation
+import group.adminservice.dto.EmployeeDTO
+import group.adminservice.dto.UsedDaysDTO
+import group.adminservice.dto.VacationDTO
 import group.adminservice.service.AdminService
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.ResponseEntity
@@ -17,7 +17,7 @@ class AdminController(
     fun importEmployees(
         @RequestBody data: ByteArray,
         response: HttpServletResponse,
-    ): ResponseEntity<List<Employee>> {
+    ): ResponseEntity<List<EmployeeDTO>> {
         val contentType = "text/csv"
         response.contentType = contentType
         return ResponseEntity.ok(adminService.importEmployees(data))
@@ -27,7 +27,7 @@ class AdminController(
     fun importVacations(
         @RequestBody data: ByteArray,
         response: HttpServletResponse,
-    ): ResponseEntity<List<Vacation>> {
+    ): ResponseEntity<List<VacationDTO>> {
         val contentType = "text/csv"
         response.contentType = contentType
         return ResponseEntity.ok(adminService.importVacations(data))
@@ -37,12 +37,12 @@ class AdminController(
     fun importUsedDays(
         @RequestBody data: ByteArray,
         response: HttpServletResponse,
-    ): ResponseEntity<List<UsedDays>> {
+    ): ResponseEntity<List<UsedDaysDTO>> {
         val contentType = "text/csv"
         response.contentType = contentType
         return ResponseEntity.ok(adminService.importUsedDays(data))
     }
 
-    @GetMapping("/allEmployees")
-    fun allEmployees(response: HttpServletResponse): ResponseEntity<List<Employee>> = ResponseEntity.ok(adminService.getAllEmployees())
+    @GetMapping("/allEmployees", produces = ["application/json"])
+    fun allEmployees(response: HttpServletResponse): ResponseEntity<List<EmployeeDTO>> = ResponseEntity.ok(adminService.getAllEmployees())
 }

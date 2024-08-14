@@ -4,6 +4,10 @@ import group.adminservice.database.model.Admin
 import group.adminservice.database.model.Employee
 import group.adminservice.database.model.UsedDays
 import group.adminservice.database.model.Vacation
+import group.adminservice.dto.EmployeeDTO
+import group.adminservice.dto.Mapper
+import group.adminservice.dto.UsedDaysDTO
+import group.adminservice.dto.VacationDTO
 import group.adminservice.helper.CSVParser
 import group.adminservice.helper.CSVParser.calculateWorkDays
 import group.adminservice.repository.AdminRepository
@@ -20,26 +24,48 @@ class AdminServiceImplementation(
     private val vacationRepository: VacationRepository,
     private val usedDaysRepository: UsedDaysRepository,
     private val adminRepository: AdminRepository,
+    private val mapper: Mapper,
 ) : AdminService {
-    override fun getAllEmployees(): List<Employee> = employeeRepository.findAll().toList()
-
-    override fun importVacations(data: ByteArray): List<Vacation> {
-        val admin = getAdminById(1)
-        return vacationRepository.saveAll(
-            CSVParser.parseVacations(data, admin),
-        )
+    override fun getAllEmployees(): List<EmployeeDTO> {
+        val employees = employeeRepository.findAll().toList()
+        val res: List<EmployeeDTO> =
+            employees.map { employee ->
+                // println("Mapiram employeeja ${employee.email}")
+                mapper.mapEmployee(employee)
+            }
+        return res
     }
 
-    override fun importUsedDays(data: ByteArray): List<UsedDays> {
+    override fun importVacations(data: ByteArray): List<VacationDTO> {
+        val admin = getAdminById(1)
+        val vacations = vacationRepository.saveAll(CSVParser.parseVacations(data, admin))
+        val res: List<VacationDTO> =
+            vacations.map { vacation ->
+                mapper.mapVacation(vacation)!!
+            }
+        return res
+    }
+
+    override fun importUsedDays(data: ByteArray): List<UsedDaysDTO> {
         val admin = getAdminById(1)
         val usedDaysToSave = CSVParser.parseUsedDays(data, admin)
         lowerVacation(usedDaysToSave)
-        return usedDaysRepository.saveAll(usedDaysToSave)
+        val temp = usedDaysRepository.saveAll(usedDaysToSave)
+        val res: List<UsedDaysDTO> =
+            temp.map { usedDays ->
+                mapper.mapUsedDays(usedDays)!!
+            }
+        return res
     }
 
-    override fun importEmployees(data: ByteArray): List<Employee> {
+    override fun importEmployees(data: ByteArray): List<EmployeeDTO> {
         val admin = getAdminById(1)
-        return employeeRepository.saveAll(CSVParser.parseEmployees(data, admin))
+        val employees = employeeRepository.saveAll(CSVParser.parseEmployees(data, admin))
+        val res: List<EmployeeDTO> =
+            employees.map { employee ->
+                mapper.mapEmployee(employee)
+            }
+        return res
     }
 
     // ne izdvajati u funkciju

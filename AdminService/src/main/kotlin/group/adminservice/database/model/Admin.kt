@@ -1,6 +1,7 @@
 package group.adminservice.database.model
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
+import group.adminservice.security.api.jwt.Role
 import jakarta.persistence.*
 
 @Entity
@@ -12,6 +13,8 @@ data class Admin(
     @OneToMany(mappedBy = "admin")
     @JsonManagedReference
     var employees: List<Employee> = listOf(),
+    @Enumerated(EnumType.STRING)
+    val role: Role = Role.ADMIN,
 ) {
     fun addEmployee(employee: Employee): List<Employee> = employees.plus(employee)
 
