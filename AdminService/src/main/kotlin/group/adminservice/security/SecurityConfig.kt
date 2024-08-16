@@ -1,6 +1,5 @@
-package group.adminservice.security.api
+package group.adminservice.security
 
-import group.adminservice.security.api.jwt.Role
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -9,7 +8,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
 /**
@@ -20,7 +18,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 @Configuration
 @EnableWebSecurity
 class SecurityConfig(
-    @Value("\${milan.gospodeboze.pomiluj}") private val myApiKey: String
+    @Value("\${milan.gospodeboze.pomiluj}") private val myApiKey: String,
 ) {
     @Bean
     @Throws(Exception::class)

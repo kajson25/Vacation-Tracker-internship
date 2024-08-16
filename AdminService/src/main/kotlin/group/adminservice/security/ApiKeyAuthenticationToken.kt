@@ -1,6 +1,5 @@
-package group.adminservice.security.api
+package group.adminservice.security
 import org.springframework.security.authentication.AbstractAuthenticationToken
-import org.springframework.security.core.GrantedAuthority
 
 class ApiKeyAuthenticationToken(
     private val apiKey: String,
@@ -22,9 +21,5 @@ class ApiKeyAuthenticationToken(
         } else {
             super.setAuthenticated(false)
         }
-    }
-
-    override fun eraseCredentials() {
-        super.eraseCredentials()
     }
 }

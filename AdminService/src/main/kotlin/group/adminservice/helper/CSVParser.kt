@@ -8,11 +8,10 @@ import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStreamReader
 import java.sql.Date
-import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-object CSVParser {
+class CSVParser {
     private fun readLines(
         data: ByteArray,
         firstRow: Boolean,
@@ -66,6 +65,7 @@ object CSVParser {
         return vacations
     }
 
+    // todo - importovan sql.date resiti
     fun parseUsedDays(
         data: ByteArray,
         admin: Admin,
@@ -98,24 +98,5 @@ object CSVParser {
             }
         }
         return usedDays
-    }
-
-    fun calculateWorkDays(
-        beginDate: Date?,
-        endDate: Date?,
-    ): Int {
-        var workingDays = 0
-        var currentDate = beginDate?.toLocalDate()
-
-        if (endDate != null && currentDate != null) {
-            while (currentDate!! <= endDate.toLocalDate()) {
-                if (currentDate.dayOfWeek != DayOfWeek.SATURDAY && currentDate.dayOfWeek != DayOfWeek.SUNDAY) {
-                    workingDays++
-                }
-                currentDate = currentDate.plusDays(1)
-            }
-        }
-
-        return workingDays
     }
 }

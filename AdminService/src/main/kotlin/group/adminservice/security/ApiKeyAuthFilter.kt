@@ -1,4 +1,4 @@
-package group.adminservice.security.api
+package group.adminservice.security
 
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest

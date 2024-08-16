@@ -9,7 +9,7 @@ import group.adminservice.dto.Mapper
 import group.adminservice.dto.UsedDaysDTO
 import group.adminservice.dto.VacationDTO
 import group.adminservice.helper.CSVParser
-import group.adminservice.helper.CSVParser.calculateWorkDays
+import group.adminservice.helper.Calculator
 import group.adminservice.repository.AdminRepository
 import group.adminservice.repository.EmployeeRepository
 import group.adminservice.repository.UsedDaysRepository
@@ -26,6 +26,9 @@ class AdminServiceImplementation(
     private val adminRepository: AdminRepository,
     private val mapper: Mapper,
 ) : AdminService {
+    val parser : CSVParser = CSVParser()
+    val calculator : Calculator = Calculator()
+
     override fun getAllEmployees(): List<EmployeeDTO> {
         val employees = employeeRepository.findAll().toList()
         val res: List<EmployeeDTO> =
@@ -38,7 +41,7 @@ class AdminServiceImplementation(
 
     override fun importVacations(data: ByteArray): List<VacationDTO> {
         val admin = getAdminById(1)
-        val vacations = vacationRepository.saveAll(CSVParser.parseVacations(data, admin))
+        val vacations = vacationRepository.saveAll(parser.parseVacations(data, admin))
         val res: List<VacationDTO> =
             vacations.map { vacation ->
                 mapper.mapVacation(vacation)!!
@@ -48,7 +51,7 @@ class AdminServiceImplementation(
 
     override fun importUsedDays(data: ByteArray): List<UsedDaysDTO> {
         val admin = getAdminById(1)
-        val usedDaysToSave = CSVParser.parseUsedDays(data, admin)
+        val usedDaysToSave = parser.parseUsedDays(data, admin)
         lowerVacation(usedDaysToSave)
         val temp = usedDaysRepository.saveAll(usedDaysToSave)
         val res: List<UsedDaysDTO> =
@@ -60,7 +63,7 @@ class AdminServiceImplementation(
 
     override fun importEmployees(data: ByteArray): List<EmployeeDTO> {
         val admin = getAdminById(1)
-        val employees = employeeRepository.saveAll(CSVParser.parseEmployees(data, admin))
+        val employees = employeeRepository.saveAll(parser.parseEmployees(data, admin))
         val res: List<EmployeeDTO> =
             employees.map { employee ->
                 mapper.mapEmployee(employee)
@@ -92,10 +95,12 @@ class AdminServiceImplementation(
                 continue
             }
 
-            var workDaysLeft = calculateWorkDays(beginDate = usedDay.beginDate, endDate = usedDay.endDate)
+            var workDaysLeft =
+                usedDay.beginDate?.let { usedDay.endDate?.let { it1 -> calculator.calculateWorkDays(beginDate = it.toLocalDate(), endDate = it1.toLocalDate()) } }
 
             val vacations = employee.vacations
-            if (employee.calculateAllFreeDays() < workDaysLeft) {
+            // todo ispraviti uslov
+            if (workDaysLeft == null || employee.calculateAllFreeDays() < workDaysLeft) {
                 throw RuntimeException("You do not have that many vacation days! You only have ${employee.vacations.size}")
             }
 
