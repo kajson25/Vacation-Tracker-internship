@@ -1,7 +1,6 @@
 package group.adminservice.database.model
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
-import group.adminservice.security.jwt.Role
 import jakarta.persistence.*
 
 @Entity

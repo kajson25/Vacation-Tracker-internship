@@ -1,9 +1,10 @@
 package group.adminservice.security
 
+import group.adminservice.error.AuthenticationException
+import group.adminservice.error.UnauthorizedException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.authentication.AuthenticationServiceException
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.web.SecurityFilterChain
@@ -21,7 +22,7 @@ class SecurityConfig(
     @Value("\${milan.gospodeboze.pomiluj}") private val myApiKey: String,
 ) {
     @Bean
-    @Throws(Exception::class)
+    @Throws(AuthenticationException::class, UnauthorizedException::class)
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         val filter = ApiKeyAuthFilter(AntPathRequestMatcher("/api/admin/**"))
         filter.setAuthenticationManager { authentication ->
@@ -36,7 +37,7 @@ class SecurityConfig(
                 )
             } else {
                 authentication.isAuthenticated = false
-                throw AuthenticationServiceException("Invalid API key")
+                throw AuthenticationException("Invalid API key")
                 // authentication
             }
         }
@@ -55,17 +56,3 @@ class SecurityConfig(
         return http.build()
     }
 }
-    /*
-    .csrf { csrf -> csrf.disable() }
-        .sessionManagement { session ->
-            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        }
-        .addFilterBefore(apiKeyAuthFilter(authenticationManager(authenticationConfiguration())), UsernamePasswordAuthenticationFilter::class.java)
-        .authorizeHttpRequests { authorize ->
-            authorize
-                .requestMatchers("/admin/\\**")
-                .authenticated()
-                .anyRequest()
-                .permitAll()
-        }
-     */

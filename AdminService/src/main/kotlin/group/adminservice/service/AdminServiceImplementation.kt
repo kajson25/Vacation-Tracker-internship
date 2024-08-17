@@ -8,6 +8,8 @@ import group.adminservice.dto.EmployeeDTO
 import group.adminservice.dto.Mapper
 import group.adminservice.dto.UsedDaysDTO
 import group.adminservice.dto.VacationDTO
+import group.adminservice.error.BadRequestException
+import group.adminservice.error.ResourceNotFoundException
 import group.adminservice.helper.CSVParser
 import group.adminservice.helper.Calculator
 import group.adminservice.repository.AdminRepository
@@ -16,6 +18,7 @@ import group.adminservice.repository.UsedDaysRepository
 import group.adminservice.repository.VacationRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
+import java.io.IOException
 
 @Service
 @Transactional
@@ -26,20 +29,24 @@ class AdminServiceImplementation(
     private val adminRepository: AdminRepository,
     private val mapper: Mapper,
 ) : AdminService {
-    val parser : CSVParser = CSVParser()
-    val calculator : Calculator = Calculator()
+    val parser: CSVParser = CSVParser()
+    val calculator: Calculator = Calculator()
 
     override fun getAllEmployees(): List<EmployeeDTO> {
         val employees = employeeRepository.findAll().toList()
+        if (employees.isEmpty()) throw ResourceNotFoundException("No employees found")
         val res: List<EmployeeDTO> =
             employees.map { employee ->
-                // println("Mapiram employeeja ${employee.email}")
                 mapper.mapEmployee(employee)
             }
         return res
     }
 
+    @Throws(IOException::class, ResourceNotFoundException::class, BadRequestException::class)
     override fun importVacations(data: ByteArray): List<VacationDTO> {
+        if (data.isEmpty()) {
+            throw BadRequestException("CSV data cannot be empty")
+        }
         val admin = getAdminById(1)
         val vacations = vacationRepository.saveAll(parser.parseVacations(data, admin))
         val res: List<VacationDTO> =
@@ -49,7 +56,11 @@ class AdminServiceImplementation(
         return res
     }
 
+    @Throws(IOException::class, ResourceNotFoundException::class, BadRequestException::class)
     override fun importUsedDays(data: ByteArray): List<UsedDaysDTO> {
+        if (data.isEmpty()) {
+            throw BadRequestException("CSV data cannot be empty")
+        }
         val admin = getAdminById(1)
         val usedDaysToSave = parser.parseUsedDays(data, admin)
         lowerVacation(usedDaysToSave)
@@ -61,7 +72,11 @@ class AdminServiceImplementation(
         return res
     }
 
+    @Throws(IOException::class, ResourceNotFoundException::class, BadRequestException::class)
     override fun importEmployees(data: ByteArray): List<EmployeeDTO> {
+        if (data.isEmpty()) {
+            throw BadRequestException("CSV data cannot be empty")
+        }
         val admin = getAdminById(1)
         val employees = employeeRepository.saveAll(parser.parseEmployees(data, admin))
         val res: List<EmployeeDTO> =
@@ -74,11 +89,10 @@ class AdminServiceImplementation(
     // ne izdvajati u funkciju
     override fun getAdminById(id: Long): Admin {
         val adminO = adminRepository.findById(id)
-        return adminO.orElseThrow { RuntimeException("Admin not found") }
+        return adminO.orElseThrow { ResourceNotFoundException("Admin not found") }
     }
 
-    fun getEmployeeByMail(email: String): Employee = employeeRepository.findByEmail(email).orElseThrow()
-
+    @Throws(ResourceNotFoundException::class)
     fun lowerVacation(usedDays: List<UsedDays>) {
         var res: List<Vacation> = mutableListOf()
         for (usedDay: UsedDays in usedDays) {
@@ -88,7 +102,7 @@ class AdminServiceImplementation(
             val employee =
                 usedDay.employee?.let {
                     employeeRepository.findById(it.employee_id).orElseThrow {
-                        IllegalArgumentException("Employee not found")
+                        ResourceNotFoundException("Employee not found")
                     }
                 }
             if (employee == null) {
@@ -96,7 +110,14 @@ class AdminServiceImplementation(
             }
 
             var workDaysLeft =
-                usedDay.beginDate?.let { usedDay.endDate?.let { it1 -> calculator.calculateWorkDays(beginDate = it.toLocalDate(), endDate = it1.toLocalDate()) } }
+                usedDay.beginDate?.let {
+                    usedDay.endDate?.let { it1 ->
+                        calculator.calculateWorkDays(
+                            beginDate = it.toLocalDate(),
+                            endDate = it1.toLocalDate(),
+                        )
+                    }
+                }
 
             val vacations = employee.vacations
             // todo ispraviti uslov
@@ -118,7 +139,6 @@ class AdminServiceImplementation(
             res = vacations
         }
 
-        // Save updated vacations to the database
         vacationRepository.saveAll(res)
     }
 }
