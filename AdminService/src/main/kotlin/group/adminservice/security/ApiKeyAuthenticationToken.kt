@@ -1,4 +1,5 @@
 package group.adminservice.security
+
 import org.springframework.security.authentication.AbstractAuthenticationToken
 
 class ApiKeyAuthenticationToken(

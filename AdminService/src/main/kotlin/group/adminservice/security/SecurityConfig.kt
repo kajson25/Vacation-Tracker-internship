@@ -1,5 +1,8 @@
 package group.adminservice.security
 
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType
+import io.swagger.v3.oas.annotations.security.SecurityScheme
 import group.adminservice.error.exceptions.AuthenticationException
 import group.adminservice.error.exceptions.UnauthorizedException
 import org.springframework.beans.factory.annotation.Value
@@ -13,11 +16,17 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
 /**
  * The SecurityConfig class configures how requests to your application are secured.
- * The authorizeHttpRequests configuration defines that any request to /admin/\** must be authenticated (i.e., must pass the API key check).
+ * The authorizeHttpRequests configuration defines that any request to /api/admin/\\** must be authenticated (i.e., must pass the API key check).
  * All other requests are permitted.
- */
+*/
 @Configuration
 @EnableWebSecurity
+@SecurityScheme(
+    name = "apiKeyAuth",
+    type = SecuritySchemeType.APIKEY,
+    `in` = SecuritySchemeIn.HEADER,
+    paramName = "Authorization",
+)
 class SecurityConfig(
     @Value("\${milan.gospodeboze.pomiluj}") private val myApiKey: String,
 ) {
