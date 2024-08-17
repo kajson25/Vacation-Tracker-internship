@@ -9,8 +9,9 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter
 import org.springframework.security.web.util.matcher.RequestMatcher
 import java.io.IOException
-import group.adminservice.error.AuthenticationException
-import group.adminservice.error.UnauthorizedException
+import group.adminservice.error.exceptions.AuthenticationException
+import group.adminservice.error.exceptions.UnauthorizedException
+import group.adminservice.error.logger.logger
 
 /**
  * The ApiKeyAuthFilter intercepts incoming requests and checks for a valid API key in the X-API-KEY header.
@@ -23,6 +24,8 @@ class ApiKeyAuthFilter(
         // private const val API_SECRET_HEADER = "API-Secret"
     }
 
+    private val log = logger<ApiKeyAuthFilter>()
+
     @Throws(AuthenticationException::class, IOException::class, UnauthorizedException::class)
     override fun attemptAuthentication(
         request: HttpServletRequest,
@@ -34,6 +37,7 @@ class ApiKeyAuthFilter(
         // val apiSecret = request.getHeader(API_SECRET_HEADER)
 
         val auth = ApiKeyAuthenticationToken(apiKey)
+        log.info("Attempting authentication")
         return authenticationManager.authenticate(auth)
     }
 
@@ -44,11 +48,8 @@ class ApiKeyAuthFilter(
         chain: FilterChain,
         authResult: Authentication,
     ) {
-        // super.successfulAuthentication(request, response, chain, authResult)
         SecurityContextHolder.getContext().authentication = authResult
-
-        // println("Request is: ${request.method}")
         chain.doFilter(request, response)
-        // println("Response is: $response")
+        log.info("Successfully authenticated")
     }
 }

@@ -26,6 +26,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.slf4j:slf4j-api:2.0.7")
+    implementation("ch.qos.logback:logback-classic:1.4.12")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")

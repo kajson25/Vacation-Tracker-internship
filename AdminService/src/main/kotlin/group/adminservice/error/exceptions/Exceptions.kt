@@ -1,4 +1,4 @@
-package group.adminservice.error
+package group.adminservice.error.exceptions
 
 class ResourceNotFoundException(
     message: String,

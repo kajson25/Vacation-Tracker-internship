@@ -1,7 +1,7 @@
 package group.adminservice.security
 
-import group.adminservice.error.AuthenticationException
-import group.adminservice.error.UnauthorizedException
+import group.adminservice.error.exceptions.AuthenticationException
+import group.adminservice.error.exceptions.UnauthorizedException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

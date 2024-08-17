@@ -1,15 +1,15 @@
 package group.adminservice.service
 
 import group.adminservice.database.model.Admin
-import group.adminservice.database.model.Employee
 import group.adminservice.database.model.UsedDays
 import group.adminservice.database.model.Vacation
 import group.adminservice.dto.EmployeeDTO
 import group.adminservice.dto.Mapper
 import group.adminservice.dto.UsedDaysDTO
 import group.adminservice.dto.VacationDTO
-import group.adminservice.error.BadRequestException
-import group.adminservice.error.ResourceNotFoundException
+import group.adminservice.error.exceptions.BadRequestException
+import group.adminservice.error.exceptions.ResourceNotFoundException
+import group.adminservice.error.logger.logger
 import group.adminservice.helper.CSVParser
 import group.adminservice.helper.Calculator
 import group.adminservice.repository.AdminRepository
@@ -31,6 +31,7 @@ class AdminServiceImplementation(
 ) : AdminService {
     val parser: CSVParser = CSVParser()
     val calculator: Calculator = Calculator()
+    private val log = logger<AdminService>()
 
     override fun getAllEmployees(): List<EmployeeDTO> {
         val employees = employeeRepository.findAll().toList()
@@ -39,6 +40,7 @@ class AdminServiceImplementation(
             employees.map { employee ->
                 mapper.mapEmployee(employee)
             }
+        log.info("Fetched data from data base")
         return res
     }
 
@@ -49,6 +51,7 @@ class AdminServiceImplementation(
         }
         val admin = getAdminById(1)
         val vacations = vacationRepository.saveAll(parser.parseVacations(data, admin))
+        log.info("Parsed and imported Vacations")
         val res: List<VacationDTO> =
             vacations.map { vacation ->
                 mapper.mapVacation(vacation)!!
@@ -63,12 +66,15 @@ class AdminServiceImplementation(
         }
         val admin = getAdminById(1)
         val usedDaysToSave = parser.parseUsedDays(data, admin)
+        log.info("Finished parsing CSV data")
         lowerVacation(usedDaysToSave)
+        log.info("Lowered used days")
         val temp = usedDaysRepository.saveAll(usedDaysToSave)
         val res: List<UsedDaysDTO> =
             temp.map { usedDays ->
                 mapper.mapUsedDays(usedDays)!!
             }
+        log.info("Saved data")
         return res
     }
 
@@ -79,6 +85,7 @@ class AdminServiceImplementation(
         }
         val admin = getAdminById(1)
         val employees = employeeRepository.saveAll(parser.parseEmployees(data, admin))
+        log.info("Parsed and imported employee")
         val res: List<EmployeeDTO> =
             employees.map { employee ->
                 mapper.mapEmployee(employee)
@@ -86,7 +93,6 @@ class AdminServiceImplementation(
         return res
     }
 
-    // ne izdvajati u funkciju
     override fun getAdminById(id: Long): Admin {
         val adminO = adminRepository.findById(id)
         return adminO.orElseThrow { ResourceNotFoundException("Admin not found") }
