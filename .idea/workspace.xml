@@ -4,7 +4,45 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7200172c-4747-4f96-a0cd-69dcef219239" name="Changes" comment="" />
+    <list default="true" id="7200172c-4747-4f96-a0cd-69dcef219239" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/build.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/gradlew.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/settings.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/AdminServiceApplication.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/controller/AdminController.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/database/model/Admin.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/database/model/Employee.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/database/model/UsedDays.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/database/model/Vacation.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/database/myscript.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/documentation/SwaggerConfiguration.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/dto/Dtos.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/dto/Mapper.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/error/exceptions/Exceptions.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/error/exceptions/MyControllerAdvice.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/error/logger/LoggerFactory.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/helper/CSVParser.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/helper/Calculator.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/repository/AdminRepository.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/repository/EmployeeRepository.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/repository/UsedDaysRepository.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/repository/VacationRepository.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/security/ApiKeyAuthFilter.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/security/ApiKeyAuthenticationToken.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/security/SecurityConfig.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/service/AdminService.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/kotlin/group/adminservice/service/AdminServiceImplementation.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/main/resources/logback.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminService/src/test/kotlin/group/adminservice/AdminServiceApplicationTests.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EmployeeService" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -74,6 +112,7 @@
       <workItem from="1723375552361" duration="999000" />
       <workItem from="1723383827888" duration="1022000" />
       <workItem from="1723400645966" duration="86000" />
+      <workItem from="1723931709609" duration="893000" />
     </task>
     <servers />
   </component>
