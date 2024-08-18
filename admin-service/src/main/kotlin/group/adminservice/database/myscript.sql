@@ -4,15 +4,15 @@ DROP TABLE UsedDays CASCADE ;
 DROP TABLE Employee CASCADE ;
 
 CREATE TABLE IF NOT EXISTS Admin (
-                       id SERIAL PRIMARY KEY
+                            admin_id SERIAL PRIMARY KEY
 );
 
 CREATE TABLE IF NOT EXISTS Employee (
-                                        id SERIAL PRIMARY KEY,
-                                        email VARCHAR(255) NOT NULL,
-                                        password VARCHAR(255) NOT NULL,
-                                        adminId INT,
-                                        FOREIGN KEY (adminId) REFERENCES Admin(id)
+                            employee_id SERIAL PRIMARY KEY,
+                            email VARCHAR(255) NOT NULL,
+                            password VARCHAR(255) NOT NULL,
+                            adminId INT,
+                            FOREIGN KEY (adminId) REFERENCES Admin(admin_id)
 
 );
 
@@ -20,18 +20,17 @@ CREATE TABLE IF NOT EXISTS Employee (
 CREATE TABLE IF NOT EXISTS Vacation (
                           vacation_id SERIAL PRIMARY KEY,
                           noOfDays INT NOT NULL,
+                          year INT NOT NULL,
                           employee_id INT,
-                          FOREIGN KEY (employee_id) REFERENCES employee(employee_id) ON DELETE CASCADE
+                          FOREIGN KEY (employee_id) REFERENCES Employee(employee_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS UsedDays (
-                          id SERIAL PRIMARY KEY,
-                          beginDay VARCHAR(16),
-                          beginDate DATE NOT NULL,
-                          endDay VARCHAR(16),
-                          endDate DATE NOT NULL,
-                          employeeId INT,
-                          FOREIGN KEY (employeeId) REFERENCES Employee(id) ON DELETE CASCADE
+                          useddays_id SERIAL PRIMARY KEY,
+                          begindate DATE NOT NULL,
+                          enddate DATE NOT NULL,
+                          employee_id INT,
+                          FOREIGN KEY (employee_id) REFERENCES Employee(employee_id) ON DELETE CASCADE
 );
 
 -- Add an Admin example

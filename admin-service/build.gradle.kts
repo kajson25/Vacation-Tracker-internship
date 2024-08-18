@@ -1,6 +1,7 @@
 plugins {
     id("org.springframework.boot") version "3.3.2"
     id("io.spring.dependency-management") version "1.1.6"
+    id("org.flywaydb.flyway") version "9.19.1"
     kotlin("jvm") version "1.9.24"
     kotlin("plugin.spring") version "1.9.24"
 }
@@ -31,10 +32,20 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.4.12")
     implementation("org.springdoc:springdoc-openapi-ui:1.7.0")
     implementation("org.springdoc:springdoc-openapi-kotlin:1.7.0")
+    implementation("org.flywaydb:flyway-core")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+flyway {
+    url = "jdbc:postgresql://localhost:5432/mydatabase"
+    user = "postgres"
+    password = "admin"
+    schemas = arrayOf("public")
+    locations = arrayOf("filesystem:src/main/resources/db/migration")
+    baselineOnMigrate = true
 }
 
 kotlin {
