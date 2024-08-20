@@ -14,8 +14,8 @@ class SwaggerConfiguration {
     fun publicApi(): GroupedOpenApi =
         GroupedOpenApi
             .builder()
-            .group("public")
-            .packagesToScan("group.employeeservice.controller")
+            .group("group.employeeservice")
+            .packagesToScan("controller")
             .build()
 
     @Bean

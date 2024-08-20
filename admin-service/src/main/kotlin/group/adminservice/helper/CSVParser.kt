@@ -4,6 +4,7 @@ import group.adminservice.database.model.Admin
 import group.adminservice.database.model.Employee
 import group.adminservice.database.model.UsedDays
 import group.adminservice.database.model.Vacation
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStreamReader
@@ -12,6 +13,8 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class CSVParser {
+    private val passwordEncoder = BCryptPasswordEncoder()
+
     private fun readLines(
         data: ByteArray,
         firstRow: Boolean,
@@ -33,7 +36,7 @@ class CSVParser {
 
         for (line: String in lines) {
             val parts = line.split(",")
-            val employee = Employee(email = parts[0], password = parts[1])
+            val employee = Employee(email = parts[0], password = passwordEncoder.encode(parts[1]))
             if (admin.getAllEmployees().contains(employee)) {
                 continue
             }

@@ -23,6 +23,8 @@ data class EmployeeResponseDTO(
     @Schema(description = "The email of the employee", example = "john.doe@example.com", required = true)
     @Email
     val email: String,
+    @Schema(description = "The password of the employee", example = "password123", required = true)
+    val password: String,
 )
 
 @Schema(description = "Response object containing the JWT token after successful authentication")

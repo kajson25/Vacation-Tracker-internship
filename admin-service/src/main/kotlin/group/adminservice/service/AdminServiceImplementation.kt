@@ -93,7 +93,8 @@ class AdminServiceImplementation(
         return res
     }
 
-    override fun getAdminById(id: Long): Admin {
+    // staviti da bude extension
+    private fun getAdminById(id: Long): Admin {
         val adminO = adminRepository.findById(id)
         return adminO.orElseThrow { ResourceNotFoundException("Admin not found") }
     }

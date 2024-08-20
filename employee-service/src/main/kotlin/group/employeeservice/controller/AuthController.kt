@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -23,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController
 class AuthController(
     private val employeeService: EmployeeService,
     private val jwtUtil: JwtUtil,
-    // val passwordEncoder: BCryptPasswordEncoder
+    private val passwordEncoder: BCryptPasswordEncoder,
 ) {
     @Operation(summary = "Authenticate User", description = "Authenticate the user and generate a JWT token")
     @ApiResponses(
@@ -40,18 +41,17 @@ class AuthController(
     @PostMapping("/authenticate")
     fun authorize(
         @Parameter(description = "Authentication request containing email and password", required = true)
-        @RequestBody authRequest: EmployeeRequestDTO,
+        @RequestBody employeeRequest: EmployeeRequestDTO,
     ): ResponseEntity<Any> {
-        val employee =
+        val employeeResponse =
             employeeService
-                .findByEmail(authRequest.email)
-        // .orElseThrow { Exception("Invalid credentials") }
+                .findByEmail(employeeRequest.email)
 
-        // return if (passwordEncoder.matches(authRequest.password, employee.password)) {
-        val token = jwtUtil.generateToken(employee.email)
-        return ResponseEntity.ok(AuthResponse(token))
-//        } else {
-//            ResponseEntity.badRequest().body("Invalid credentials")
-//        }
+        return if (passwordEncoder.matches(employeeRequest.password, employeeResponse.password)) {
+            val token = jwtUtil.generateToken(employeeResponse.email)
+            return ResponseEntity.ok(AuthResponse(token))
+        } else {
+            ResponseEntity.badRequest().body("Invalid credentials")
+        }
     }
 }

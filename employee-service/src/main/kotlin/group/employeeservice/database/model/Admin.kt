@@ -12,11 +12,4 @@ data class Admin(
     @OneToMany(mappedBy = "admin")
     @JsonManagedReference
     var employees: List<Employee> = listOf(),
-) {
-    fun addEmployee(employee: Employee): List<Employee> = employees.plus(employee)
-
-    fun getAllEmployees(): List<Employee> = employees
-
-    fun getMaxId(): Long = employees.maxOfOrNull { it.employee_id } ?: 0
-}
-
+)

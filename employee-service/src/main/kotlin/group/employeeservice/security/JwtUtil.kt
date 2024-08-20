@@ -5,6 +5,7 @@ import group.employeeservice.error.logger.logger
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
+import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.util.*
@@ -15,6 +16,9 @@ class JwtUtil(
 ) {
     private val log = logger<JwtUtil>()
 
+    // Use a byte array for the secret key
+    private val key = Keys.hmacShaKeyFor(secretKey.toByteArray())
+
     fun generateToken(email: String): String {
         val claims: MutableMap<String, Any> = HashMap()
         return Jwts
@@ -23,7 +27,7 @@ class JwtUtil(
             .setSubject(email)
             .setIssuedAt(Date(System.currentTimeMillis()))
             .setExpiration(Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours validity
-            .signWith(SignatureAlgorithm.HS256, secretKey)
+            .signWith(key, SignatureAlgorithm.HS256) // Updated to use key and SignatureAlgorithm
             .compact()
     }
 
@@ -55,10 +59,12 @@ class JwtUtil(
         }
         val claims =
             Jwts
-                .parser()
-                .setSigningKey(secretKey)
+                .parserBuilder() // Use parserBuilder instead of parser
+                .setSigningKey(key) // Updated to use key
+                .build() // Build the parser
                 .parseClaimsJws(temp)
                 .body
         return claimsResolver(claims)
     }
 }
+
