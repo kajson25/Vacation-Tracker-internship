@@ -1,8 +1,6 @@
 package group.adminservice.controller
 
-import group.adminservice.dto.EmployeeDTO
-import group.adminservice.dto.UsedDaysDTO
-import group.adminservice.dto.VacationDTO
+import group.adminservice.dto.*
 import group.adminservice.service.AdminService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -27,7 +25,7 @@ class AdminController(
             ApiResponse(
                 responseCode = "200",
                 description = "Employees imported successfully",
-                content = [Content(mediaType = "application/json", schema = Schema(implementation = EmployeeDTO::class))],
+                content = [Content(mediaType = "application/json", schema = Schema(implementation = EmployeeResponseDTO::class))],
             ),
             ApiResponse(responseCode = "400", description = "Invalid CSV data provided"),
             ApiResponse(responseCode = "500", description = "Internal server error"),
@@ -38,11 +36,7 @@ class AdminController(
         @Parameter(description = "CSV file content", required = true)
         @RequestBody data: ByteArray,
         response: HttpServletResponse,
-    ): ResponseEntity<List<EmployeeDTO>> {
-        val contentType = "text/csv"
-        response.contentType = contentType
-        return ResponseEntity.ok(adminService.importEmployees(data))
-    }
+    ): ResponseEntity<List<EmployeeResponseDTO>> = ResponseEntity.ok(adminService.importEmployees(data))
 
     @Operation(summary = "Import Vacations", description = "Import vacation data from a CSV file")
     @ApiResponses(
@@ -50,7 +44,7 @@ class AdminController(
             ApiResponse(
                 responseCode = "200",
                 description = "Vacations imported successfully",
-                content = [Content(mediaType = "application/json", schema = Schema(implementation = VacationDTO::class))],
+                content = [Content(mediaType = "application/json", schema = Schema(implementation = VacationResponseDTO::class))],
             ),
             ApiResponse(responseCode = "400", description = "Invalid CSV data provided"),
             ApiResponse(responseCode = "500", description = "Internal server error"),
@@ -61,11 +55,7 @@ class AdminController(
         @Parameter(description = "CSV file content", required = true)
         @RequestBody data: ByteArray,
         response: HttpServletResponse,
-    ): ResponseEntity<List<VacationDTO>> {
-        val contentType = "text/csv"
-        response.contentType = contentType
-        return ResponseEntity.ok(adminService.importVacations(data))
-    }
+    ): ResponseEntity<List<VacationResponseDTO>> = ResponseEntity.ok(adminService.importVacations(data))
 
     @Operation(summary = "Import Used Days", description = "Import used vacation days data from a CSV file")
     @ApiResponses(
@@ -73,7 +63,7 @@ class AdminController(
             ApiResponse(
                 responseCode = "200",
                 description = "Used days imported successfully",
-                content = [Content(mediaType = "application/json", schema = Schema(implementation = UsedDaysDTO::class))],
+                content = [Content(mediaType = "application/json", schema = Schema(implementation = UsedDaysResponseDTO::class))],
             ),
             ApiResponse(responseCode = "400", description = "Invalid CSV data provided"),
             ApiResponse(responseCode = "500", description = "Internal server error"),
@@ -84,11 +74,7 @@ class AdminController(
         @Parameter(description = "CSV file content", required = true)
         @RequestBody data: ByteArray,
         response: HttpServletResponse,
-    ): ResponseEntity<List<UsedDaysDTO>> {
-        val contentType = "text/csv"
-        response.contentType = contentType
-        return ResponseEntity.ok(adminService.importUsedDays(data))
-    }
+    ): ResponseEntity<List<UsedDaysResponseDTO>> = ResponseEntity.ok(adminService.importUsedDays(data))
 
     @Operation(summary = "Get All Employees", description = "Retrieve all employees")
     @ApiResponses(
@@ -96,12 +82,13 @@ class AdminController(
             ApiResponse(
                 responseCode = "200",
                 description = "Employees retrieved successfully",
-                content = [Content(mediaType = "application/json", schema = Schema(implementation = EmployeeDTO::class))],
+                content = [Content(mediaType = "application/json", schema = Schema(implementation = EmployeeResponseDTO::class))],
             ),
             ApiResponse(responseCode = "500", description = "Internal server error"),
         ],
     )
     @GetMapping("/allEmployees", produces = ["application/json"])
-    fun allEmployees(response: HttpServletResponse): ResponseEntity<List<EmployeeDTO>> = ResponseEntity.ok(adminService.getAllEmployees())
+    fun allEmployees(response: HttpServletResponse): ResponseEntity<List<EmployeeResponseDTO>> =
+        ResponseEntity.ok(adminService.getAllEmployees())
 }
 

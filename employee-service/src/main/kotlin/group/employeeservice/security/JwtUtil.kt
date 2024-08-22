@@ -16,7 +16,6 @@ class JwtUtil(
 ) {
     private val log = logger<JwtUtil>()
 
-    // Use a byte array for the secret key
     private val key = Keys.hmacShaKeyFor(secretKey.toByteArray())
 
     fun generateToken(email: String): String {
@@ -26,8 +25,8 @@ class JwtUtil(
             .setClaims(claims)
             .setSubject(email)
             .setIssuedAt(Date(System.currentTimeMillis()))
-            .setExpiration(Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours validity
-            .signWith(key, SignatureAlgorithm.HS256) // Updated to use key and SignatureAlgorithm
+            .setExpiration(Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+            .signWith(key, SignatureAlgorithm.HS256)
             .compact()
     }
 
@@ -59,12 +58,11 @@ class JwtUtil(
         }
         val claims =
             Jwts
-                .parserBuilder() // Use parserBuilder instead of parser
-                .setSigningKey(key) // Updated to use key
-                .build() // Build the parser
+                .parserBuilder()
+                .setSigningKey(key)
+                .build()
                 .parseClaimsJws(temp)
                 .body
         return claimsResolver(claims)
     }
 }
-

@@ -1,17 +1,16 @@
 package group.employeeservice.service.usedDays
 
 import group.employeeservice.dto.Mapper
-import group.employeeservice.dto.UsedDaysDTO
+import group.employeeservice.dto.UsedDaysResponseDTO
 import group.employeeservice.error.exception.BadRequestException
 import group.employeeservice.error.exception.ResourceNotFoundException
 import group.employeeservice.error.logger.logger
-import group.employeeservice.helper.Parser
+import group.employeeservice.helper.parseUsedDays
 import group.employeeservice.repository.EmployeeRepository
 import group.employeeservice.repository.UsedDaysRepository
 import group.employeeservice.security.JwtUtil
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
-import java.io.IOException
 
 @Service
 @Transactional
@@ -21,25 +20,29 @@ class UsedDaysServiceImplementation(
     private val mapper: Mapper,
     private val jwtUtil: JwtUtil,
 ) : UsedDaysService {
-    val parser: Parser = Parser()
     private val log = logger<UsedDaysService>()
 
-    @Throws(IOException::class, ResourceNotFoundException::class, BadRequestException::class)
+    @Throws(ResourceNotFoundException::class, BadRequestException::class)
     override fun addUsedDay(
         data: ByteArray,
         token: String,
-    ): UsedDaysDTO? {
+    ): UsedDaysResponseDTO {
         if (data.isEmpty()) {
             throw BadRequestException("CSV data cannot be empty")
         }
         val email = jwtUtil.extractEmail(token)
         val usedDay =
-            parser.parseUsedDays(
+            parseUsedDays(
                 data,
-                employeeRepository.findByEmail(email).orElseThrow { ResourceNotFoundException("Employee not found: $email") },
+                email,
             )
         log.info("Parsed used days")
+        val emp = employeeRepository.findByEmail(email).get()
+        val usedDayModel = mapper.mapUsedDaysRequestToUsedDays(usedDay, emp)
+        emp.usedDays = emp.usedDays.plus(usedDayModel)
+        val res = usedDaysRepository.save(usedDayModel)
+        log.info("Saved used day")
 
-        return usedDay?.let { mapper.mapUsedDays(usedDaysRepository.save(it)) }
+        return mapper.mapUsedDaysToUsedDaysResponse(res)!!
     }
 }

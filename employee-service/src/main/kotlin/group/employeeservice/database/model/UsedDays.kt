@@ -1,24 +1,21 @@
 package group.employeeservice.database.model
 
-import com.fasterxml.jackson.annotation.JsonBackReference
 import jakarta.persistence.*
-import java.sql.Date
-import java.time.DayOfWeek
+import java.time.LocalDate
 
 @Entity
 @Table(name = "useddays")
-data class UsedDays(
+class UsedDays(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val useddays_id: Long = 0,
-    @Column(name = "begindate")
-    val beginDate: Date? = null,
-    @Column(name = "enddate")
-    val endDate: Date? = null,
+    @Column(name = "begindate", nullable = false)
+    var beginDate: LocalDate? = null,
+    @Column(name = "enddate", nullable = false)
+    var endDate: LocalDate? = null,
     @ManyToOne
-    @JoinColumn(name = "employee_id")
-    @JsonBackReference
-    val employee: Employee? = null,
+    @JoinColumn(name = "employee_id", nullable = false)
+    var employee: Employee? = null,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

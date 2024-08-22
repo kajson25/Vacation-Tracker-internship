@@ -1,6 +1,6 @@
 package group.employeeservice.controller
 
-import group.employeeservice.dto.UsedDaysDTO
+import group.employeeservice.dto.UsedDaysResponseDTO
 import group.employeeservice.service.usedDays.UsedDaysService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -25,7 +25,7 @@ class UsedDaysController(
             ApiResponse(
                 responseCode = "200",
                 description = "Used days added successfully",
-                content = [Content(mediaType = "application/json", schema = Schema(implementation = UsedDaysDTO::class))],
+                content = [Content(mediaType = "application/json", schema = Schema(implementation = UsedDaysResponseDTO::class))],
             ),
             ApiResponse(responseCode = "400", description = "Invalid CSV data provided"),
             ApiResponse(responseCode = "401", description = "Unauthorized access"),
@@ -39,9 +39,7 @@ class UsedDaysController(
         @Parameter(description = "CSV file content", required = true)
         @RequestBody data: ByteArray,
         response: HttpServletResponse,
-    ): ResponseEntity<UsedDaysDTO> {
-        val contentType = "text/csv"
-        response.contentType = contentType
+    ): ResponseEntity<UsedDaysResponseDTO> {
         return ResponseEntity.ok(usedDaysService.addUsedDay(data, token))
     }
 }

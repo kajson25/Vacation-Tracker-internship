@@ -1,15 +1,15 @@
 package group.adminservice.service
 
-import group.adminservice.dto.EmployeeDTO
-import group.adminservice.dto.UsedDaysDTO
-import group.adminservice.dto.VacationDTO
+import group.adminservice.dto.EmployeeResponseDTO
+import group.adminservice.dto.UsedDaysResponseDTO
+import group.adminservice.dto.VacationResponseDTO
 
 interface AdminService {
-    fun getAllEmployees(): List<EmployeeDTO>
+    fun getAllEmployees(): List<EmployeeResponseDTO>
 
-    fun importVacations(data: ByteArray): List<VacationDTO>
+    fun importVacations(data: ByteArray): List<VacationResponseDTO>
 
-    fun importUsedDays(data: ByteArray): List<UsedDaysDTO>
+    fun importUsedDays(data: ByteArray): List<UsedDaysResponseDTO>
 
-    fun importEmployees(data: ByteArray): List<EmployeeDTO>
+    fun importEmployees(data: ByteArray): List<EmployeeResponseDTO>
 }

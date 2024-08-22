@@ -19,6 +19,6 @@ class EmployeeServiceImplementation(
     override fun findByEmail(email: String): EmployeeResponseDTO {
         val employee = employeeRepository.findByEmail(email).orElseThrow { ResourceNotFoundException("Employee not found: $email") }
         log.info("Found an employee in data base: ${employee.email}")
-        return mapper.mapEmployeeToResponse(employee)
+        return mapper.mapEmployeeToEmployeeResponse(employee)
     }
 }

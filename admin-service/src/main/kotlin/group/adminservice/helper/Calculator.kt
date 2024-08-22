@@ -1,5 +1,7 @@
 package group.adminservice.helper
 
+import group.adminservice.database.model.Employee
+import group.adminservice.database.model.Vacation
 import java.time.DayOfWeek
 import java.time.LocalDate
 
@@ -19,5 +21,18 @@ class Calculator {
         }
 
         return workingDays
+    }
+
+    fun calculateAllFreeDays(
+        employee: Employee,
+//        year: Int,
+    ): Int {
+        var res = 0
+        for (vacation: Vacation in employee.vacations) {
+//            if (vacation.year == year) {
+            res += vacation.noOfDays
+//            }
+        }
+        return res
     }
 }

@@ -46,21 +46,21 @@ class Calculator {
     ): Int {
         var res = 0
         val year = beginDate.year
-        val tempDay = UsedDays(beginDate = Date.valueOf(beginDate), endDate = Date.valueOf(endDate), employee = employee)
+        val tempDay = UsedDays(beginDate = beginDate, endDate = endDate, employee = employee)
         if (employee.usedDays.contains(tempDay)) {
             if (tempDay.beginDate == null || tempDay.endDate == null) {
                 return -1
             }
-            return calculateWorkDays(tempDay.beginDate.toLocalDate(), tempDay.endDate.toLocalDate())
+            return calculateWorkDays(tempDay.beginDate!!, tempDay.endDate!!)
         }
         for (usedDay: UsedDays in employee.usedDays) {
             if (usedDay.beginDate == null || usedDay.endDate == null) {
                 continue
             }
-            if (usedDay.beginDate.toLocalDate().year != year) {
+            if (usedDay.beginDate!!.year != year) {
                 continue
             }
-            res += calculateWorkDays(usedDay.beginDate.toLocalDate(), usedDay.endDate.toLocalDate())
+            res += calculateWorkDays(usedDay.beginDate!!, usedDay.endDate!!)
         }
         return res
     }

@@ -1,4 +1,4 @@
-package group.adminservice.error.exceptions
+package group.employeeservice.error.exception
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 
 @ControllerAdvice
-class MyControllerAdvice {
-    private val log = LoggerFactory.getLogger(MyControllerAdvice::class.java)
+class ExceptionHandler {
+    private val log = LoggerFactory.getLogger(ExceptionHandler::class.java)
 
     @ExceptionHandler(ResourceNotFoundException::class)
     @ApiResponses(
@@ -87,28 +87,6 @@ class MyControllerAdvice {
     fun handleUnsupportedMediaTypeException(ex: UnsupportedMediaTypeException): ResponseEntity<String> {
         log.error("Wrong data format: ${ex.message}")
         return ResponseEntity(ex.message, HttpStatus.UNSUPPORTED_MEDIA_TYPE)
-    }
-
-    @ExceptionHandler(ServiceUnavailableException::class)
-    @ApiResponses(
-        value = [
-            ApiResponse(responseCode = "503", description = "Service unavailable - try again later"),
-        ],
-    )
-    fun handleServiceUnavailableException(ex: ServiceUnavailableException): ResponseEntity<String> {
-        log.error("Service is currently unavailable: ${ex.message}")
-        return ResponseEntity(ex.message, HttpStatus.SERVICE_UNAVAILABLE)
-    }
-
-    @ExceptionHandler(TimeoutException::class)
-    @ApiResponses(
-        value = [
-            ApiResponse(responseCode = "408", description = "Request timeout"),
-        ],
-    )
-    fun handleTimeoutException(ex: TimeoutException): ResponseEntity<String> {
-        log.error("Request timeout: ${ex.message}")
-        return ResponseEntity(ex.message, HttpStatus.REQUEST_TIMEOUT)
     }
 
     @ExceptionHandler(Exception::class)

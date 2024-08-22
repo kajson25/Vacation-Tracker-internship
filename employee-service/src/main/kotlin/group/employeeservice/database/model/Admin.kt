@@ -1,15 +1,13 @@
 package group.employeeservice.database.model
 
-import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
 
 @Entity
 @Table(name = "admin")
-data class Admin(
+class Admin(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var admin_id: Long = 0,
+    val admin_id: Long = 1,
     @OneToMany(mappedBy = "admin")
-    @JsonManagedReference
-    var employees: List<Employee> = listOf(),
+    var employees: List<Employee> = mutableListOf(),
 )

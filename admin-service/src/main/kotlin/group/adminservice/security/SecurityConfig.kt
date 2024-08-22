@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
@@ -31,23 +32,19 @@ class SecurityConfig(
     @Value("\${milan.gospodeboze.pomiluj}") private val myApiKey: String,
 ) {
     @Bean
-    @Throws(AuthenticationException::class, UnauthorizedException::class)
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         val filter = ApiKeyAuthFilter(AntPathRequestMatcher("/api/admin/**"))
         filter.setAuthenticationManager { authentication ->
             val apiKey = authentication.principal as String
-            // val apiSecret = authentication.credentials as String
 
-            if (myApiKey == apiKey) { // && "valid-api-secret" == apiSecret) {
+            if (myApiKey == apiKey) {
                 ApiKeyAuthenticationToken(
                     apiKey,
-                    // apiSecret,
-                    // listOf(SimpleGrantedAuthority(Role.ADMIN.name)),
                 )
             } else {
+                // todo - ovde excepetion sljaka savrseno
                 authentication.isAuthenticated = false
                 throw AuthenticationException("Invalid API key")
-                // authentication
             }
         }
 
@@ -56,7 +53,6 @@ class SecurityConfig(
             .authorizeHttpRequests { authorize ->
                 authorize
                     .requestMatchers("/api/admin/**")
-                    // .hasRole(Role.ADMIN.name)
                     .authenticated()
                     .anyRequest()
                     .permitAll()
@@ -64,4 +60,7 @@ class SecurityConfig(
 
         return http.build()
     }
+
+    @Bean
+    fun passwordEncoder() = BCryptPasswordEncoder()
 }

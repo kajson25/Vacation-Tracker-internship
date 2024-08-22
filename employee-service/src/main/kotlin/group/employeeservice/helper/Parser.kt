@@ -1,41 +1,48 @@
 package group.employeeservice.helper
 
-import group.employeeservice.database.model.Employee
-import group.employeeservice.database.model.UsedDays
-import java.io.BufferedReader
+import group.employeeservice.dto.UsedDaysRequestDTO
+import group.employeeservice.error.exception.ValidationException
+import org.apache.commons.csv.CSVFormat
+import org.apache.commons.csv.CSVParser
 import java.io.ByteArrayInputStream
 import java.io.InputStreamReader
-import java.sql.Date
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.regex.Pattern
 
-class Parser {
-    private fun readLine(data: ByteArray): String {
-        val inputStream = ByteArrayInputStream(data)
-        val reader = BufferedReader(InputStreamReader(inputStream))
-        return reader.readLines().joinToString("\n")
+// Validation functions
+fun isValidEmail(email: String): Boolean {
+    val emailRegex = "^[A-Za-z0-9+_.-]+@(.+)\$"
+    return Pattern.compile(emailRegex).matcher(email).matches()
+}
+
+fun parseUsedDays(
+    data: ByteArray,
+    email: String,
+): UsedDaysRequestDTO {
+    val inputStream = ByteArrayInputStream(data)
+    val reader = InputStreamReader(inputStream)
+    val parser = CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader())
+    val formatter = DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy")
+    val record = parser.records[0]
+
+    // val email = record.get(0)
+    val beginDate = record.get(0)
+    val endDate = record.get(1)
+
+    if (!isValidEmail(email)) {
+        throw ValidationException("Invalid email format: $email")
     }
 
-    fun parseUsedDays(
-        data: ByteArray,
-        employee: Employee,
-    ): UsedDays? {
-        val line = readLine(data)
-        val regex = """"([^"]*)"""".toRegex() // Regex to match quoted strings
-        val parts = regex.findAll(line).toList()
-        val beginDate = parts[0].groupValues[1]
-        val endDate = parts[1].groupValues[1]
-        val formatter = DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy")
-        val usedDay =
-            UsedDays(
-                beginDate = Date.valueOf(LocalDate.parse(beginDate, formatter)),
-                endDate = Date.valueOf(LocalDate.parse(endDate, formatter)),
-                employee = employee,
-            )
-        if (employee.usedDays.contains(usedDay)) {
-            return null
-        }
-        employee.usedDays = employee.addUsedDays(usedDay)
-        return usedDay
-    }
+    val parsedBeginDate = LocalDate.parse(beginDate, formatter)
+    val parsedEndDate = LocalDate.parse(endDate, formatter)
+
+    val usedDays =
+        UsedDaysRequestDTO(
+            beginDate = parsedBeginDate,
+            endDate = parsedEndDate,
+            employeeEmail = email,
+        )
+
+    return usedDays
 }

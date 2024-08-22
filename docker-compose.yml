@@ -26,9 +26,6 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/mydatabase
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: admin
-#      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
-#    depends_on:
-#      - db
 
   employee-service:
     depends_on:
@@ -43,6 +40,3 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/mydatabase
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: admin
-#      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
-#    depends_on:
-#      - db

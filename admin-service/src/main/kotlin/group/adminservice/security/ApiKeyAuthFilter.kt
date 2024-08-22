@@ -21,27 +21,22 @@ class ApiKeyAuthFilter(
 ) : AbstractAuthenticationProcessingFilter(requiresAuth) {
     companion object {
         private const val API_KEY_HEADER = "API-Key"
-        // private const val API_SECRET_HEADER = "API-Secret"
     }
 
     private val log = logger<ApiKeyAuthFilter>()
 
-    @Throws(AuthenticationException::class, IOException::class, UnauthorizedException::class)
     override fun attemptAuthentication(
         request: HttpServletRequest,
         response: HttpServletResponse,
     ): Authentication {
         val apiKey =
-            request.getHeader(API_KEY_HEADER) ?: // || apiSecret == null) {
-                throw AuthenticationException("Missing API Key or Secret")
-        // val apiSecret = request.getHeader(API_SECRET_HEADER)
+            request.getHeader(API_KEY_HEADER)
 
         val auth = ApiKeyAuthenticationToken(apiKey)
         log.info("Attempting authentication")
         return authenticationManager.authenticate(auth)
     }
 
-    @Throws(IOException::class, ServletException::class)
     override fun successfulAuthentication(
         request: HttpServletRequest,
         response: HttpServletResponse,

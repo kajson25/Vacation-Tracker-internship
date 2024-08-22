@@ -1,24 +1,21 @@
 package group.adminservice.service
 
 import group.adminservice.database.model.Admin
+import group.adminservice.database.model.Employee
 import group.adminservice.database.model.UsedDays
 import group.adminservice.database.model.Vacation
-import group.adminservice.dto.EmployeeDTO
-import group.adminservice.dto.Mapper
-import group.adminservice.dto.UsedDaysDTO
-import group.adminservice.dto.VacationDTO
+import group.adminservice.dto.*
 import group.adminservice.error.exceptions.BadRequestException
 import group.adminservice.error.exceptions.ResourceNotFoundException
 import group.adminservice.error.logger.logger
-import group.adminservice.helper.CSVParser
-import group.adminservice.helper.Calculator
+import group.adminservice.helper.*
 import group.adminservice.repository.AdminRepository
 import group.adminservice.repository.EmployeeRepository
 import group.adminservice.repository.UsedDaysRepository
 import group.adminservice.repository.VacationRepository
 import jakarta.transaction.Transactional
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
-import java.io.IOException
 
 @Service
 @Transactional
@@ -28,67 +25,100 @@ class AdminServiceImplementation(
     private val usedDaysRepository: UsedDaysRepository,
     private val adminRepository: AdminRepository,
     private val mapper: Mapper,
+    private val encoder: BCryptPasswordEncoder,
 ) : AdminService {
-    val parser: CSVParser = CSVParser()
     val calculator: Calculator = Calculator()
     private val log = logger<AdminService>()
 
-    override fun getAllEmployees(): List<EmployeeDTO> {
+    override fun getAllEmployees(): List<EmployeeResponseDTO> {
         val employees = employeeRepository.findAll().toList()
         if (employees.isEmpty()) throw ResourceNotFoundException("No employees found")
-        val res: List<EmployeeDTO> =
+        val res: List<EmployeeResponseDTO> =
             employees.map { employee ->
-                mapper.mapEmployee(employee)
+                mapper.mapEmployeeToEmployeeResponse(employee)
             }
         log.info("Fetched data from data base")
         return res
     }
 
-    @Throws(IOException::class, ResourceNotFoundException::class, BadRequestException::class)
-    override fun importVacations(data: ByteArray): List<VacationDTO> {
+    @Throws(ResourceNotFoundException::class, BadRequestException::class)
+    override fun importVacations(data: ByteArray): List<VacationResponseDTO> {
         if (data.isEmpty()) {
             throw BadRequestException("CSV data cannot be empty")
         }
-        val admin = getAdminById(1)
-        val vacations = vacationRepository.saveAll(parser.parseVacations(data, admin))
+        val requestDto: List<VacationRequestDTO> = parseVacations(data)
+        if (requestDto.isEmpty()) throw BadRequestException("CSV data cannot be empty")
+        val vacationModel: List<Vacation> =
+            requestDto.map { dto ->
+                val emp = employeeRepository.findByEmail(dto.employeeEmail)
+                if (!emp.isPresent) {
+                    throw ResourceNotFoundException("Employee ${dto.employeeEmail} not found")
+                }
+                val employee = emp.get()
+                val vacations = mapper.mapVacationRequestToVacation(dto, employee)
+                employee.vacations = employee.vacations.plus(vacations)
+                vacations
+            }
+        val vacations = vacationRepository.saveAll(vacationModel)
         log.info("Parsed and imported Vacations")
-        val res: List<VacationDTO> =
+        val res: List<VacationResponseDTO> =
             vacations.map { vacation ->
-                mapper.mapVacation(vacation)!!
+                mapper.mapVacationToVacationResponse(vacation)
             }
         return res
     }
 
-    @Throws(IOException::class, ResourceNotFoundException::class, BadRequestException::class)
-    override fun importUsedDays(data: ByteArray): List<UsedDaysDTO> {
+    @Throws(ResourceNotFoundException::class, BadRequestException::class)
+    override fun importUsedDays(data: ByteArray): List<UsedDaysResponseDTO> {
         if (data.isEmpty()) {
             throw BadRequestException("CSV data cannot be empty")
         }
-        val admin = getAdminById(1)
-        val usedDaysToSave = parser.parseUsedDays(data, admin)
+        val usedDaysDTO: List<UsedDaysRequestDTO> = parseUsedDays(data)
+        if (usedDaysDTO.isEmpty()) {
+            throw BadRequestException("CSV data cannot be empty")
+        }
+        val usedDaysModel: List<UsedDays> =
+            usedDaysDTO.map { dto ->
+                val emp = employeeRepository.findByEmail(dto.employeeEmail)
+                if (!emp.isPresent) {
+                    throw ResourceNotFoundException("Employee ${dto.employeeEmail} not found")
+                }
+                val employee = emp.get()
+                val usedDays = mapper.mapUsedDaysRequestToUsedDays(dto, employee)
+                employee.usedDays = employee.usedDays.plus(usedDays)
+                usedDays
+            }
+
         log.info("Finished parsing CSV data")
-        lowerVacation(usedDaysToSave)
+        lowerVacation(usedDaysModel)
+        usedDaysRepository.saveAll(usedDaysModel)
         log.info("Lowered used days")
-        val temp = usedDaysRepository.saveAll(usedDaysToSave)
-        val res: List<UsedDaysDTO> =
-            temp.map { usedDays ->
-                mapper.mapUsedDays(usedDays)!!
+        val usedDaysToSave: List<UsedDaysResponseDTO> =
+            usedDaysModel.map { dto ->
+                mapper.mapUsedDaysToUsedDaysResponse(dto)!!
             }
-        log.info("Saved data")
-        return res
+
+        return usedDaysToSave
     }
 
-    @Throws(IOException::class, ResourceNotFoundException::class, BadRequestException::class)
-    override fun importEmployees(data: ByteArray): List<EmployeeDTO> {
+    @Throws(ResourceNotFoundException::class, BadRequestException::class)
+    override fun importEmployees(data: ByteArray): List<EmployeeResponseDTO> {
         if (data.isEmpty()) {
             throw BadRequestException("CSV data cannot be empty")
         }
         val admin = getAdminById(1)
-        val employees = employeeRepository.saveAll(parser.parseEmployees(data, admin))
+        val employeeRequest: List<EmployeeRequestDTO> = parseEmployees(data)
+        val employeeModel: List<Employee> =
+            employeeRequest.map { dto ->
+                dto.password = encoder.encode(dto.password)
+                mapper.mapEmployeeRequestToEmployee(dto, admin)
+            }
+        val employees = employeeRepository.saveAll(employeeModel)
+        admin.employees = admin.employees.plus(employeeModel)
         log.info("Parsed and imported employee")
-        val res: List<EmployeeDTO> =
+        val res: List<EmployeeResponseDTO> =
             employees.map { employee ->
-                mapper.mapEmployee(employee)
+                mapper.mapEmployeeToEmployeeResponse(employee)
             }
         return res
     }
@@ -120,15 +150,15 @@ class AdminServiceImplementation(
                 usedDay.beginDate?.let {
                     usedDay.endDate?.let { it1 ->
                         calculator.calculateWorkDays(
-                            beginDate = it.toLocalDate(),
-                            endDate = it1.toLocalDate(),
+                            beginDate = it,
+                            endDate = it1,
                         )
                     }
                 }
 
             val vacations = employee.vacations
             // todo ispraviti uslov
-            if (workDaysLeft == null || employee.calculateAllFreeDays() < workDaysLeft) {
+            if (workDaysLeft == null || calculator.calculateAllFreeDays(employee) < workDaysLeft) {
                 throw RuntimeException("You do not have that many vacation days! You only have ${employee.vacations.size}")
             }
 
