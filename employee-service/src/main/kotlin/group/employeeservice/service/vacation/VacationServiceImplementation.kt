@@ -2,6 +2,7 @@ package group.employeeservice.service.vacation
 
 import group.employeeservice.database.model.Employee
 import group.employeeservice.error.exception.BadRequestException
+import group.employeeservice.error.exception.ResourceNotFoundException
 import group.employeeservice.error.exception.UnsupportedMediaTypeException
 import group.employeeservice.error.logger.logger
 import group.employeeservice.helper.Calculator
@@ -25,7 +26,10 @@ class VacationServiceImplementation(
     private fun extractEmployee(token: String): Employee {
         val email = jwtUtil.extractEmail(token)
         log.info("Extracted employee: $email")
-        return employeeRepository.findByEmail(email).get()
+        val emp =
+            employeeRepository.findByEmail(email)
+                ?: throw ResourceNotFoundException("No employee with the email: $email")
+        return emp
     }
 
     // koliko je dana iskorisceno

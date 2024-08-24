@@ -25,13 +25,13 @@ class Calculator {
 
     fun calculateAllFreeDays(
         employee: Employee,
-//        year: Int,
+        year: Int,
     ): Int {
         var res = 0
         for (vacation: Vacation in employee.vacations) {
-//            if (vacation.year == year) {
-            res += vacation.noOfDays
-//            }
+            if (vacation.year == year) {
+                res += vacation.noOfDays
+            }
         }
         return res
     }

@@ -8,6 +8,7 @@ import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import java.time.Duration
 import java.util.*
 
 @Component
@@ -25,7 +26,7 @@ class JwtUtil(
             .setClaims(claims)
             .setSubject(email)
             .setIssuedAt(Date(System.currentTimeMillis()))
-            .setExpiration(Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+            .setExpiration(Date(System.currentTimeMillis() + Duration.ofHours(10).toMillis()))
             .signWith(key, SignatureAlgorithm.HS256)
             .compact()
     }

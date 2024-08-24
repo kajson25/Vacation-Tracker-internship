@@ -37,7 +37,9 @@ class UsedDaysServiceImplementation(
                 email,
             )
         log.info("Parsed used days")
-        val emp = employeeRepository.findByEmail(email).get()
+        val emp =
+            employeeRepository.findByEmail(email)
+                ?: throw ResourceNotFoundException("No employee with the email: $email")
         val usedDayModel = mapper.mapUsedDaysRequestToUsedDays(usedDay, emp)
         emp.usedDays = emp.usedDays.plus(usedDayModel)
         val res = usedDaysRepository.save(usedDayModel)

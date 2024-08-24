@@ -3,7 +3,6 @@ package group.employeeservice.helper
 import group.employeeservice.database.model.Employee
 import group.employeeservice.database.model.UsedDays
 import group.employeeservice.database.model.Vacation
-import java.sql.Date
 import java.time.DayOfWeek
 import java.time.LocalDate
 
@@ -38,7 +37,6 @@ class Calculator {
         return res
     }
 
-    // todo - sql date in line 49
     fun calculateAllUsedDays(
         employee: Employee,
         beginDate: LocalDate,

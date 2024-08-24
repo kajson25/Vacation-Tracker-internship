@@ -156,9 +156,9 @@ class AdminServiceImplementation(
                     }
                 }
 
+            val year = usedDay.beginDate?.year
             val vacations = employee.vacations
-            // todo ispraviti uslov
-            if (workDaysLeft == null || calculator.calculateAllFreeDays(employee) < workDaysLeft) {
+            if (workDaysLeft == null || year?.let { calculator.calculateAllFreeDays(employee, it) }!! < workDaysLeft) {
                 throw RuntimeException("You do not have that many vacation days! You only have ${employee.vacations.size}")
             }
 
