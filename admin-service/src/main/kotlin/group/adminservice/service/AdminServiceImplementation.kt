@@ -27,7 +27,6 @@ class AdminServiceImplementation(
     private val mapper: Mapper,
     private val encoder: BCryptPasswordEncoder,
 ) : AdminService {
-    val calculator: Calculator = Calculator()
     private val log = logger<AdminService>()
 
     override fun getAllEmployees(): List<EmployeeResponseDTO> {
@@ -149,7 +148,7 @@ class AdminServiceImplementation(
             var workDaysLeft =
                 usedDay.beginDate?.let {
                     usedDay.endDate?.let { it1 ->
-                        calculator.calculateWorkDays(
+                        calculateWorkDays(
                             beginDate = it,
                             endDate = it1,
                         )
@@ -158,7 +157,7 @@ class AdminServiceImplementation(
 
             val year = usedDay.beginDate?.year
             val vacations = employee.vacations
-            if (workDaysLeft == null || year?.let { calculator.calculateAllFreeDays(employee, it) }!! < workDaysLeft) {
+            if (workDaysLeft == null || year?.let { employee.calculateAllFreeDays(it) }!! < workDaysLeft) {
                 throw RuntimeException("You do not have that many vacation days! You only have ${employee.vacations.size}")
             }
 

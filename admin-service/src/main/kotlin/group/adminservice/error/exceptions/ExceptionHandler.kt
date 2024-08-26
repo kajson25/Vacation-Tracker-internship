@@ -56,17 +56,6 @@ class ExceptionHandler {
         return ResponseEntity(ex.message, HttpStatus.BAD_REQUEST)
     }
 
-    @ExceptionHandler(UnauthorizedException::class)
-    @ApiResponses(
-        value = [
-            ApiResponse(responseCode = "401", description = "Unauthorized access"),
-        ],
-    )
-    fun handleUnauthorizedException(ex: UnauthorizedException): ResponseEntity<String> {
-        log.error("Unauthorized: ${ex.message}")
-        return ResponseEntity(ex.message, HttpStatus.UNAUTHORIZED)
-    }
-
     @ExceptionHandler(AuthenticationException::class)
     @ApiResponses(
         value = [

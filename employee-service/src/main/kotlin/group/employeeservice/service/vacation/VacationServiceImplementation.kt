@@ -5,7 +5,9 @@ import group.employeeservice.error.exception.BadRequestException
 import group.employeeservice.error.exception.ResourceNotFoundException
 import group.employeeservice.error.exception.UnsupportedMediaTypeException
 import group.employeeservice.error.logger.logger
-import group.employeeservice.helper.Calculator
+import group.employeeservice.helper.calculateAllDays
+import group.employeeservice.helper.calculateAllUsedDays
+import group.employeeservice.helper.calculateAvailableDays
 import group.employeeservice.repository.EmployeeRepository
 import group.employeeservice.security.JwtUtil
 import jakarta.transaction.Transactional
@@ -20,7 +22,6 @@ class VacationServiceImplementation(
     private val employeeRepository: EmployeeRepository,
     private val jwtUtil: JwtUtil,
 ) : VacationService {
-    val calculator: Calculator = Calculator()
     private val log = logger<VacationService>()
 
     private fun extractEmployee(token: String): Employee {
@@ -40,8 +41,7 @@ class VacationServiceImplementation(
     ): Int {
         if (year < 1950) throw BadRequestException("Invalid year")
         val emp: Employee = extractEmployee(token)
-        return calculator.calculateAllUsedDays(
-            emp,
+        return emp.calculateAllUsedDays(
             LocalDate.parse("01-01-$year", DateTimeFormatter.ofPattern("dd-MM-yyyy")),
             LocalDate.parse("31-12-$year", DateTimeFormatter.ofPattern("dd-MM-yyyy")),
         )
@@ -55,8 +55,7 @@ class VacationServiceImplementation(
     ): Int {
         if (year < 1950) throw BadRequestException("Invalid year")
         val emp: Employee = extractEmployee(token)
-        return calculator.calculateAllDays(
-            emp,
+        return emp.calculateAllDays(
             LocalDate.parse("01-01-$year", DateTimeFormatter.ofPattern("dd-MM-yyyy")),
             LocalDate.parse("31-12-$year", DateTimeFormatter.ofPattern("dd-MM-yyyy")),
         )
@@ -70,7 +69,7 @@ class VacationServiceImplementation(
     ): Int {
         if (year < 1950) throw BadRequestException("Invalid year")
         val emp: Employee = extractEmployee(token)
-        return calculator.calculateAvailableDays(emp, year)
+        return emp.calculateAvailableDays(year)
     }
 
     @Throws(UnsupportedMediaTypeException::class, DateTimeParseException::class)
@@ -84,6 +83,6 @@ class VacationServiceImplementation(
         val formatEnd = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
         log.info("Formatted dates")
 
-        return calculator.calculateAllDays(emp, formatStart, formatEnd)
+        return emp.calculateAllDays(formatStart, formatEnd)
     }
 }

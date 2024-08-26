@@ -5,34 +5,29 @@ import group.adminservice.database.model.Vacation
 import java.time.DayOfWeek
 import java.time.LocalDate
 
-class Calculator {
-    fun calculateWorkDays(
-        beginDate: LocalDate,
-        endDate: LocalDate,
-    ): Int {
-        var workingDays = 0
-        var currentDate = beginDate
+fun calculateWorkDays(
+    beginDate: LocalDate,
+    endDate: LocalDate,
+): Int {
+    var workingDays = 0
+    var currentDate = beginDate
 
-        while (currentDate <= endDate) {
-            if (currentDate.dayOfWeek != DayOfWeek.SATURDAY && currentDate.dayOfWeek != DayOfWeek.SUNDAY) {
-                workingDays++
-            }
-            currentDate = currentDate.plusDays(1)
+    while (currentDate <= endDate) {
+        if (currentDate.dayOfWeek != DayOfWeek.SATURDAY && currentDate.dayOfWeek != DayOfWeek.SUNDAY) {
+            workingDays++
         }
-
-        return workingDays
+        currentDate = currentDate.plusDays(1)
     }
 
-    fun calculateAllFreeDays(
-        employee: Employee,
-        year: Int,
-    ): Int {
-        var res = 0
-        for (vacation: Vacation in employee.vacations) {
-            if (vacation.year == year) {
-                res += vacation.noOfDays
-            }
+    return workingDays
+}
+
+fun Employee.calculateAllFreeDays(year: Int): Int {
+    var res = 0
+    for (vacation: Vacation in this.vacations) {
+        if (vacation.year == year) {
+            res += vacation.noOfDays
         }
-        return res
     }
+    return res
 }

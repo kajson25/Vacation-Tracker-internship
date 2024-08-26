@@ -3,14 +3,10 @@ package group.adminservice.security
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import jakarta.servlet.ServletException
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter
 import org.springframework.security.web.util.matcher.RequestMatcher
-import java.io.IOException
-import group.adminservice.error.exceptions.AuthenticationException
-import group.adminservice.error.exceptions.UnauthorizedException
 import group.adminservice.error.logger.logger
 
 /**

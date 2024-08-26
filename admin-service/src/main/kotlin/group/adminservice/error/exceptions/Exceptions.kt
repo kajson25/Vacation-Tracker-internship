@@ -13,10 +13,6 @@ class BadRequestException(
     message: String,
 ) : CustomException(message)
 
-class UnauthorizedException(
-    message: String,
-) : CustomException(message)
-
 class AuthenticationException(
     message: String,
 ) : CustomException(message)

@@ -1,34 +1,30 @@
 package group.employeeservice.error.exception
 
-open class CustomException(
+open class EmployeeException(
     message: String,
 ) : RuntimeException(message)
 
 class ResourceNotFoundException(
     message: String,
-) : CustomException(message)
+) : EmployeeException(message)
 
 // 400 Bad Request.
 class BadRequestException(
     message: String,
-) : CustomException(message)
-
-class UnauthorizedException(
-    message: String,
-) : CustomException(message)
+) : EmployeeException(message)
 
 class AuthenticationException(
     message: String,
-) : CustomException(message)
+) : EmployeeException(message)
 
 class UnsupportedMediaTypeException(
     message: String,
-) : CustomException(message)
+) : EmployeeException(message)
 
 class ValidationException(
     message: String,
-) : CustomException(message)
+) : EmployeeException(message)
 
 class FileStorageException(
     message: String,
-) : CustomException(message)
+) : EmployeeException(message)
