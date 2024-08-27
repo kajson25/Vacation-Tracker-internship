@@ -4,12 +4,12 @@
 
 This project consists of two microservices: `admin-service` and `employee-service`, both of which connect to a shared PostgreSQL database. The application is built using Kotlin with Spring Boot and managed with Gradle Kotlin. Docker is used for containerization.
 
-## Admin Service
+### Admin Service
 
 - **Privileges:** The admin service has full privileges and can access all client data.
 - **Authentication:** The admin service uses basic X-API-Key authentication.
 
-## Employee Service
+### Employee Service
 
 - **Privileges:** The employee service is limited to accessing data relevant to the authenticated employee.
 - **Authentication:** The employee service uses JWT tokens for authentication.
@@ -35,23 +35,23 @@ This project consists of two microservices: `admin-service` and `employee-servic
 
 ### Steps
 
-1. **Clone the repository:**
+1. Clone the repository:
 
     ```bash
     git clone https://github.com/kajson25/RBT_Project.git
     ```
 
-2. **Build the project:**
+2. Build the project:
 
     ```bash
     ./gradlew build
     ```
 
-3. **Configure your PostgreSQL database** with the required schema.
+3. Configure your PostgreSQL database with the required schema.
 
-4. **Set up the necessary environment variables** in `application.properties` for both services.
+4. Set up the necessary environment variables in `application.properties` for both services.
 
-5. **Start the services using Docker Compose:**
+5. Start the services using Docker Compose:
 
     ```bash
     docker-compose up --build
@@ -69,7 +69,7 @@ The employee service allows employees to authenticate and manage their vacation 
 
 ## Database - ERD
 
-![Database ERD](https://github.com/user-attachments/assets/415b2387-26fb-403f-914f-6ebda306de4b)
+![myERD](https://github.com/user-attachments/assets/415b2387-26fb-403f-914f-6ebda306de4b)
 
 ## Configuration
 
@@ -78,183 +78,57 @@ The employee service allows employees to authenticate and manage their vacation 
 Both microservices require configuration settings defined in `application.properties`. Below is an example of key configuration parameters:
 
 ```properties
-# PostgreSQL Database Configuration
 spring.datasource.url=jdbc:postgresql://localhost:5432/mydatabase
-spring.datasource.username=postgres
-spring.datasource.password=your-admin
 ```
 
-# JWT Configuration for Employee Service
-jwt.secret=your-jwt-secret
-jwt.expiration=3600000
+## API Routes
 
-# X-API-Key for Admin Service
-api.key=admin
+### Admin Service Routes
 
+- **POST** `/api/admin/importEmployees`  
+  Import employee data from a CSV file.
 
-API Routes
-## Admin Controller
+- **POST** `/api/admin/importVacations`  
+  Import vacation data from a CSV file.
 
-The `AdminController` is responsible for handling administrative tasks related to employees, vacations, and used vacation days. It provides endpoints to import data from CSV files and retrieve information.
+- **POST** `/api/admin/importUsedDays`  
+  Import used vacation days from a CSV file.
 
-### Base URL
+- **GET** `/api/admin/allEmployees`  
+  Retrieve all employee data.
 
-`/api/admin`
+### Employee Service Routes
 
-### Endpoints
+- **POST** `/api/authenticate`  
+  Authenticate the employee and generate a JWT token.
 
-#### 1. Import Employees
+- **POST** `/api/employee/addUsedDays`  
+  Add used vacation days by importing data from a CSV file.
 
-**Description:** Imports employee data from a CSV file.
+- **GET** `/api/employee/usedDays`  
+  Retrieve the number of used vacation days for a given year.
 
-- **URL:** `/importEmployees`
-- **Method:** `POST`
-- **Consumes:** `text/csv`
-- **Request Body:** 
-  - **data:** (ByteArray) The CSV file content as a byte array. Required.
+- **GET** `/api/employee/allVacationDays`  
+  Retrieve the total number of vacation days for a given year.
 
-#### 2. Import Vacations
+- **GET** `/api/employee/availableDays`  
+  Retrieve the number of available vacation days for a given year.
 
-**Description:** Imports vacation data from a CSV file.
+- **GET** `/api/employee/usedDaysInPeriod`  
+  Retrieve the number of used vacation days in a given period.
 
-- **URL:** `/importVacations`
-- **Method:** `POST`
-- **Consumes:** `text/csv`
-- **Request Body:** 
-  - **data:** (ByteArray) The CSV file content as a byte array. Required.
+### Running Tests
 
-#### 3. Import Used Days
-
-**Description:** Imports used vacation days data from a CSV file.
-
-- **URL:** `/importUsedDays`
-- **Method:** `POST`
-- **Consumes:** `text/csv`
-- **Request Body:** 
-  - **data:** (ByteArray) The CSV file content as a byte array. Required.
-
-#### 4. Get All Employees
-
-**Description:** Retrieves all employees.
-
-- **URL:** `/allEmployees`
-- **Method:** `GET`
-- **Produces:** `application/json`
-
-## Authentication Controller
-
-The `AuthController` handles operations related to user authentication, including the generation of JWT tokens.
-
-### Base URL
-
-`/api`
-
-### Endpoints
-
-#### 1. Authenticate User
-
-**Description:** Authenticate the user and generate a JWT token.
-
-- **URL:** `/authenticate`
-- **Method:** `POST`
-- **Consumes:** `application/json`
-- **Request Body:** 
-  - **employeeRequest:** (EmployeeRequestDTO) The authentication request containing email and password. Required.
-
----
-
-## Used Days Controller
-
-The `UsedDaysController` manages operations related to the used vacation days of employees.
-
-### Base URL
-
-`/api/employee`
-
-### Endpoints
-
-#### 1. Add Used Day
-
-**Description:** Add a record of used vacation days by importing data from a CSV file.
-
-- **URL:** `/addUsedDays`
-- **Method:** `POST`
-- **Consumes:** `text/csv`
-- **Request Header:** 
-  - **Authorization:** (String) The authorization token. Required.
-- **Request Body:** 
-  - **data:** (ByteArray) The CSV file content as a byte array. Required.
-
----
-
-## Vacation Controller
-
-The `VacationController` handles operations related to employee vacation days.
-
-### Base URL
-
-`/api/employee`
-
-### Endpoints
-
-#### 1. Get Used Days
-
-**Description:** Retrieve the number of used vacation days for a given year.
-
-- **URL:** `/usedDays`
-- **Method:** `GET`
-- **Produces:** `application/json`
-- **Request Header:** 
-  - **Authorization:** (String) The authorization token. Required.
-- **Request Parameters:** 
-  - **year:** (Int) The year for which used days are being retrieved. Required.
-
-#### 2. Get All Vacation Days
-
-**Description:** Retrieve the total number of vacation days for a given year.
-
-- **URL:** `/allVacationDays`
-- **Method:** `GET`
-- **Produces:** `application/json`
-- **Request Header:** 
-  - **Authorization:** (String) The authorization token. Required.
-- **Request Parameters:** 
-  - **year:** (Int) The year for which all vacation days are being retrieved. Required.
-
-#### 3. Get Available Days
-
-**Description:** Retrieve the number of available vacation days for a given year.
-
-- **URL:** `/availableDays`
-- **Method:** `GET`
-- **Produces:** `application/json`
-- **Request Header:** 
-  - **Authorization:** (String) The authorization token. Required.
-- **Request Parameters:** 
-  - **year:** (Int) The year for which available days are being retrieved. Required.
-
-#### 4. Get Used Days in Period
-
-**Description:** Retrieve the number of used vacation days in a given period.
-
-- **URL:** `/usedDaysInPeriod`
-- **Method:** `GET`
-- **Produces:** `application/json`
-- **Request Header:** 
-  - **Authorization:** (String) The authorization token. Required.
-- **Request Parameters:** 
-  - **startDate:** (String) The start date of the period (yyyy-MM-dd). Required.
-  - **endDate:** (String) The end date of the period (yyyy-MM-dd). Required.
-
+To run the tests, use the following command:
 
 ```bash
 ./gradlew test
 ```
-- **Docker**
-  - Building and Running Containers
-  - The application is containerized using Docker. You can build and run the containers using Docker Compose:
+Docker
+Building and Running Containers
+The application is containerized using Docker. You can build and run the containers using Docker Compose:
 
-```bash
+```bash:
 docker-compose up --build
 ```
 This command will start both the admin and employee services along with a PostgreSQL database.
