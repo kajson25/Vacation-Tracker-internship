@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service
 @Transactional
 class EmployeeServiceImplementation(
     val employeeRepository: EmployeeRepository,
-    val mapper: Mapper,
 ) : EmployeeService {
     private val log = logger<EmployeeService>()
+    val mapper: Mapper = Mapper()
 
     override fun findByEmail(email: String): EmployeeResponseDTO {
         val employee =

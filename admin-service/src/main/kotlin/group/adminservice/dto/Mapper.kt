@@ -4,9 +4,7 @@ import group.adminservice.database.model.Admin
 import group.adminservice.database.model.Employee
 import group.adminservice.database.model.UsedDays
 import group.adminservice.database.model.Vacation
-import org.springframework.stereotype.Component
 
-@Component
 class Mapper {
     fun mapEmployeeRequestToEmployee(
         employeeRequestDTO: EmployeeRequestDTO,

@@ -24,10 +24,10 @@ class AdminServiceImplementation(
     private val vacationRepository: VacationRepository,
     private val usedDaysRepository: UsedDaysRepository,
     private val adminRepository: AdminRepository,
-    private val mapper: Mapper,
     private val encoder: BCryptPasswordEncoder,
 ) : AdminService {
     private val log = logger<AdminService>()
+    val mapper: Mapper = Mapper()
 
     override fun getAllEmployees(): List<EmployeeResponseDTO> {
         val employees = employeeRepository.findAll().toList()
@@ -105,7 +105,7 @@ class AdminServiceImplementation(
         if (data.isEmpty()) {
             throw BadRequestException("CSV data cannot be empty")
         }
-        val admin = getAdminById(1)
+        val admin = adminRepository.getAdminById(1)
         val employeeRequest: List<EmployeeRequestDTO> = parseEmployees(data)
         val employeeModel: List<Employee> =
             employeeRequest.map { dto ->
@@ -122,9 +122,8 @@ class AdminServiceImplementation(
         return res
     }
 
-    // staviti da bude extension
-    private fun getAdminById(id: Long): Admin {
-        val adminO = adminRepository.findById(id)
+    fun AdminRepository.getAdminById(id: Long): Admin {
+        val adminO = this.findById(id)
         return adminO.orElseThrow { ResourceNotFoundException("Admin not found") }
     }
 

@@ -6,7 +6,7 @@ import group.employeeservice.database.model.Vacation
 import java.time.DayOfWeek
 import java.time.LocalDate
 
-private fun calculateWorkDays( // funkcija ne zavisi od usedDays ili meployee id
+private fun calculateWorkDays( // funkcija ne zavisi od usedDays ili employee id
     beginDate: LocalDate,
     endDate: LocalDate,
 ): Int {

@@ -17,10 +17,10 @@ import org.springframework.stereotype.Service
 class UsedDaysServiceImplementation(
     private val usedDaysRepository: UsedDaysRepository,
     private val employeeRepository: EmployeeRepository,
-    private val mapper: Mapper,
     private val jwtUtil: JwtUtil,
 ) : UsedDaysService {
     private val log = logger<UsedDaysService>()
+    val mapper: Mapper = Mapper()
 
     @Throws(ResourceNotFoundException::class, BadRequestException::class)
     override fun addUsedDay(
